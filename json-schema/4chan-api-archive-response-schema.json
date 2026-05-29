@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ArchiveResponse",
+  "description": "Top-level response from `/{board}/archive.json` \u2014 an array of archived OP numbers.",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-schema/4chan-api-archive-response-schema.json",
+  "items": {
+    "type": "integer",
+    "description": "An archived OP ID.",
+    "example": 571958
+  },
+  "type": "array"
+}

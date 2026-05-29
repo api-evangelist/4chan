@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-structure/4chan-api-cooldowns-structure.json",
+  "name": "Cooldowns",
+  "description": "Per-board cooldown intervals (in seconds) between successive posts of each type.",
+  "type": "object",
+  "properties": {
+    "threads": {
+      "type": "int32",
+      "description": "Minimum seconds between consecutive thread creations from the same poster.",
+      "example": 600
+    },
+    "replies": {
+      "type": "int32",
+      "description": "Minimum seconds between consecutive replies from the same poster.",
+      "example": 60
+    },
+    "images": {
+      "type": "int32",
+      "description": "Minimum seconds between consecutive image posts from the same poster.",
+      "example": 60
+    }
+  }
+}

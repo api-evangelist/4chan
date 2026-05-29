@@ -1,0 +1,71 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: 4chan
+providerId: 4chan
+created: '2026-05-28'
+modified: '2026-05-28'
+reconciled: true
+tags:
+  - Social
+  - Imageboard
+  - Read Only
+  - Free
+description: >-
+  The 4chan Read-Only JSON API is provided free of charge with no commercial
+  tiers, API keys, or paid quotas. All access is anonymous and subject only to
+  the published rate limits (see rate-limits/) and the 4chan API Terms of
+  Service. The only money-flowing surface 4chan operates is the consumer-facing
+  "4chan Pass" (a site-wide CAPTCHA bypass for posters on boards.4chan.org),
+  which is not part of the JSON API surface and is therefore documented here for
+  completeness only.
+sources:
+  - https://github.com/4chan/4chan-API
+  - https://github.com/4chan/4chan-API#api-terms-of-service
+  - https://www.4chan.org/pass
+plans:
+  - id: 4chan-readonly-json-api-free
+    name: Read-Only JSON API — Free
+    type: freemium
+    description: >-
+      The default and only access mode for the 4chan Read-Only JSON API. Free,
+      anonymous, no signup, no API key, subject to the 1 request/sec and
+      10 seconds-per-thread polling floor.
+    entries:
+      - label: HTTP GET requests
+        name: requests
+        type: metered
+        metric: request
+        limit: -1
+        timeFrame: usage
+        geo: global
+        unit: 1
+        price: '0.00'
+        userMultiplied: false
+    elements:
+      - name: All 6 read-only endpoints (boards, threadlist, catalog, archive, index pages, threads)
+      - name: HTTP and HTTPS support
+      - name: CORS allowed from boards.4chan.org and boards.4channel.org
+      - name: No authentication required
+      - name: If-Modified-Since caching supported
+  - id: 4chan-pass-consumer
+    name: 4chan Pass (consumer, not API)
+    type: subscription
+    description: >-
+      Consumer-facing site pass that bypasses CAPTCHA on boards.4chan.org for
+      human posters. Not part of the JSON API surface — included for context
+      only. Pricing per the 4chan Pass page.
+    entries:
+      - label: 1-year Pass
+        name: pass_1year
+        type: subscription
+        metric: year
+        limit: -1
+        timeFrame: year
+        geo: global
+        unit: 1
+        price: see https://www.4chan.org/pass
+        userMultiplied: false
+    elements:
+      - name: CAPTCHA bypass on posting (web site only, not API)
+      - name: No effect on the read-only JSON API access surface

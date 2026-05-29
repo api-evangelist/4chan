@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-structure/4chan-api-archive-response-structure.json",
+  "name": "ArchiveResponse",
+  "description": "Top-level response from `/{board}/archive.json` \u2014 an array of archived OP numbers.",
+  "type": "array",
+  "items": {
+    "type": "int32",
+    "description": "An archived OP ID.",
+    "example": 571958
+  }
+}

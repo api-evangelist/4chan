@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ThreadlistEntry",
+  "description": "Compact thread summary used in the per-board threadlist.",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-schema/4chan-api-threadlist-entry-schema.json",
+  "properties": {
+    "no": {
+      "type": "integer",
+      "description": "Thread OP ID.",
+      "example": 570368
+    },
+    "last_modified": {
+      "type": "integer",
+      "description": "UNIX timestamp the thread was last modified.",
+      "example": 1546294897
+    },
+    "replies": {
+      "type": "integer",
+      "description": "Number of replies in the thread.",
+      "example": 2
+    }
+  },
+  "type": "object",
+  "required": [
+    "no",
+    "last_modified",
+    "replies"
+  ]
+}

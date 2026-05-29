@@ -1,0 +1,573 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ThreadResponse",
+  "description": "Top-level response from `/{board}/thread/{thread}.json`.",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-schema/4chan-api-thread-response-schema.json",
+  "properties": {
+    "posts": {
+      "type": "array",
+      "description": "The OP followed by every reply in the thread, in chronological order.",
+      "items": {
+        "type": "object",
+        "description": "A single post \u2014 either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, \u2026) or only on posts with an attached file.",
+        "required": [
+          "no",
+          "resto",
+          "now",
+          "time",
+          "name"
+        ],
+        "properties": {
+          "no": {
+            "type": "integer",
+            "description": "Numeric post ID.",
+            "example": 570368
+          },
+          "resto": {
+            "type": "integer",
+            "description": "For replies, the OP ID this post replies to. For OPs, `0`.",
+            "example": 0
+          },
+          "sticky": {
+            "type": "integer",
+            "description": "`1` if the thread is pinned to the top of the board (OP only).",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 1
+          },
+          "closed": {
+            "type": "integer",
+            "description": "`1` if the thread is closed to new replies (OP only).",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 1
+          },
+          "now": {
+            "type": "string",
+            "description": "Localized post timestamp in `MM/DD/YY(Day)HH:MM` (or `HH:MM:SS`) format, EST/EDT.",
+            "example": "12/31/18(Mon)17:05:48"
+          },
+          "time": {
+            "type": "integer",
+            "description": "UNIX timestamp the post was created.",
+            "example": 1546293948
+          },
+          "name": {
+            "type": "string",
+            "description": "Display name used for the post (defaults to `Anonymous`).",
+            "example": "Anonymous"
+          },
+          "trip": {
+            "type": "string",
+            "description": "User tripcode in the form `!tripcode` or `!!securetripcode`.",
+            "example": "!K.WeEabc"
+          },
+          "id": {
+            "type": "string",
+            "description": "Poster ID (8 chars) \u2014 present only when the board has per-thread poster IDs enabled.",
+            "example": "ABcd1234"
+          },
+          "capcode": {
+            "type": "string",
+            "description": "Staff capcode on the post.",
+            "enum": [
+              "mod",
+              "admin",
+              "admin_highlight",
+              "manager",
+              "developer",
+              "founder"
+            ],
+            "example": "mod"
+          },
+          "country": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 country code of the poster, or `XX` if unknown.",
+            "example": "US"
+          },
+          "country_name": {
+            "type": "string",
+            "description": "Human-readable country name of the poster.",
+            "example": "United States"
+          },
+          "board_flag": {
+            "type": "string",
+            "description": "Board-specific flag code (only on boards with board flags enabled).",
+            "example": "AB"
+          },
+          "flag_name": {
+            "type": "string",
+            "description": "Board-specific flag display name.",
+            "example": "Flag Name AB"
+          },
+          "sub": {
+            "type": "string",
+            "description": "OP subject (OP only, when set).",
+            "example": "Welcome to /po/!"
+          },
+          "com": {
+            "type": "string",
+            "description": "Post comment as HTML-escaped string.",
+            "example": "Welcome to /po/! We specialize in origami, papercraft, and everything that's relevant to paper engineering."
+          },
+          "tim": {
+            "type": "integer",
+            "description": "UNIX timestamp + microtime that the attachment was uploaded \u2014 also the file ID for `i.4cdn.org`.",
+            "example": 1546293948883
+          },
+          "filename": {
+            "type": "string",
+            "description": "Original filename of the attachment as uploaded.",
+            "example": "yotsuba_folding"
+          },
+          "ext": {
+            "type": "string",
+            "description": "Attachment file extension.",
+            "enum": [
+              ".jpg",
+              ".png",
+              ".gif",
+              ".pdf",
+              ".swf",
+              ".webm"
+            ],
+            "example": ".png"
+          },
+          "fsize": {
+            "type": "integer",
+            "description": "Attachment file size, in bytes.",
+            "example": 516657
+          },
+          "md5": {
+            "type": "string",
+            "description": "24-character packed base64 MD5 hash of the attachment.",
+            "example": "uZUeZeB14FVR+Mc2ScHvVA=="
+          },
+          "w": {
+            "type": "integer",
+            "description": "Attachment width in pixels.",
+            "example": 530
+          },
+          "h": {
+            "type": "integer",
+            "description": "Attachment height in pixels.",
+            "example": 449
+          },
+          "tn_w": {
+            "type": "integer",
+            "description": "Thumbnail width in pixels.",
+            "example": 250
+          },
+          "tn_h": {
+            "type": "integer",
+            "description": "Thumbnail height in pixels.",
+            "example": 211
+          },
+          "filedeleted": {
+            "type": "integer",
+            "description": "`1` if the post had a file and that file has been deleted.",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 0
+          },
+          "spoiler": {
+            "type": "integer",
+            "description": "`1` if the attachment is spoilered.",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 0
+          },
+          "custom_spoiler": {
+            "type": "integer",
+            "description": "Custom spoiler ID `1-10` (only on boards with custom spoilers).",
+            "minimum": 1,
+            "maximum": 10,
+            "example": 1
+          },
+          "replies": {
+            "type": "integer",
+            "description": "Total number of replies in the thread (OP only).",
+            "example": 2
+          },
+          "images": {
+            "type": "integer",
+            "description": "Total number of image replies in the thread (OP only).",
+            "example": 2
+          },
+          "bumplimit": {
+            "type": "integer",
+            "description": "`1` once the thread has reached its bump limit (OP only).",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 0
+          },
+          "imagelimit": {
+            "type": "integer",
+            "description": "`1` once the thread has reached its image-reply limit (OP only).",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 0
+          },
+          "tag": {
+            "type": "string",
+            "description": "Category of `.swf` upload on `/f/` (OP only, `/f/` only).",
+            "example": "Game"
+          },
+          "semantic_url": {
+            "type": "string",
+            "description": "SEO-friendly URL slug for the thread (OP only).",
+            "example": "welcome-to-po"
+          },
+          "since4pass": {
+            "type": "integer",
+            "description": "Year the poster bought a 4chan Pass (only when the poster opted in).",
+            "example": 2018
+          },
+          "unique_ips": {
+            "type": "integer",
+            "description": "Number of unique posters in the thread (OP only, only when the thread is live).",
+            "example": 1
+          },
+          "m_img": {
+            "type": "integer",
+            "description": "`1` if a mobile-optimized variant of the attachment exists.",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 1
+          },
+          "archived": {
+            "type": "integer",
+            "description": "`1` once the thread has been archived (OP only).",
+            "enum": [
+              0,
+              1
+            ],
+            "example": 1
+          },
+          "archived_on": {
+            "type": "integer",
+            "description": "UNIX timestamp the thread was archived (OP only).",
+            "example": 1566530948
+          },
+          "omitted_posts": {
+            "type": "integer",
+            "description": "Replies omitted from a catalog/index preview (OP only on catalog/index responses).",
+            "example": 1
+          },
+          "omitted_images": {
+            "type": "integer",
+            "description": "Image replies omitted from a catalog/index preview (OP only on catalog/index responses).",
+            "example": 1
+          },
+          "last_modified": {
+            "type": "integer",
+            "description": "UNIX timestamp the thread was last modified (OP only on catalog/threadlist responses).",
+            "example": 1566530948
+          },
+          "last_replies": {
+            "type": "array",
+            "description": "Most recent reply objects shown in a catalog preview (OP only on catalog responses).",
+            "items": {
+              "type": "object",
+              "description": "A single post \u2014 either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, \u2026) or only on posts with an attached file.",
+              "required": [
+                "no",
+                "resto",
+                "now",
+                "time",
+                "name"
+              ],
+              "properties": {
+                "no": {
+                  "type": "integer",
+                  "description": "Numeric post ID.",
+                  "example": 570368
+                },
+                "resto": {
+                  "type": "integer",
+                  "description": "For replies, the OP ID this post replies to. For OPs, `0`.",
+                  "example": 0
+                },
+                "sticky": {
+                  "type": "integer",
+                  "description": "`1` if the thread is pinned to the top of the board (OP only).",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 1
+                },
+                "closed": {
+                  "type": "integer",
+                  "description": "`1` if the thread is closed to new replies (OP only).",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 1
+                },
+                "now": {
+                  "type": "string",
+                  "description": "Localized post timestamp in `MM/DD/YY(Day)HH:MM` (or `HH:MM:SS`) format, EST/EDT.",
+                  "example": "12/31/18(Mon)17:05:48"
+                },
+                "time": {
+                  "type": "integer",
+                  "description": "UNIX timestamp the post was created.",
+                  "example": 1546293948
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name used for the post (defaults to `Anonymous`).",
+                  "example": "Anonymous"
+                },
+                "trip": {
+                  "type": "string",
+                  "description": "User tripcode in the form `!tripcode` or `!!securetripcode`.",
+                  "example": "!K.WeEabc"
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Poster ID (8 chars) \u2014 present only when the board has per-thread poster IDs enabled.",
+                  "example": "ABcd1234"
+                },
+                "capcode": {
+                  "type": "string",
+                  "description": "Staff capcode on the post.",
+                  "enum": [
+                    "mod",
+                    "admin",
+                    "admin_highlight",
+                    "manager",
+                    "developer",
+                    "founder"
+                  ],
+                  "example": "mod"
+                },
+                "country": {
+                  "type": "string",
+                  "description": "ISO 3166-1 alpha-2 country code of the poster, or `XX` if unknown.",
+                  "example": "US"
+                },
+                "country_name": {
+                  "type": "string",
+                  "description": "Human-readable country name of the poster.",
+                  "example": "United States"
+                },
+                "board_flag": {
+                  "type": "string",
+                  "description": "Board-specific flag code (only on boards with board flags enabled).",
+                  "example": "AB"
+                },
+                "flag_name": {
+                  "type": "string",
+                  "description": "Board-specific flag display name.",
+                  "example": "Flag Name AB"
+                },
+                "sub": {
+                  "type": "string",
+                  "description": "OP subject (OP only, when set).",
+                  "example": "Welcome to /po/!"
+                },
+                "com": {
+                  "type": "string",
+                  "description": "Post comment as HTML-escaped string.",
+                  "example": "Welcome to /po/! We specialize in origami, papercraft, and everything that's relevant to paper engineering."
+                },
+                "tim": {
+                  "type": "integer",
+                  "description": "UNIX timestamp + microtime that the attachment was uploaded \u2014 also the file ID for `i.4cdn.org`.",
+                  "example": 1546293948883
+                },
+                "filename": {
+                  "type": "string",
+                  "description": "Original filename of the attachment as uploaded.",
+                  "example": "yotsuba_folding"
+                },
+                "ext": {
+                  "type": "string",
+                  "description": "Attachment file extension.",
+                  "enum": [
+                    ".jpg",
+                    ".png",
+                    ".gif",
+                    ".pdf",
+                    ".swf",
+                    ".webm"
+                  ],
+                  "example": ".png"
+                },
+                "fsize": {
+                  "type": "integer",
+                  "description": "Attachment file size, in bytes.",
+                  "example": 516657
+                },
+                "md5": {
+                  "type": "string",
+                  "description": "24-character packed base64 MD5 hash of the attachment.",
+                  "example": "uZUeZeB14FVR+Mc2ScHvVA=="
+                },
+                "w": {
+                  "type": "integer",
+                  "description": "Attachment width in pixels.",
+                  "example": 530
+                },
+                "h": {
+                  "type": "integer",
+                  "description": "Attachment height in pixels.",
+                  "example": 449
+                },
+                "tn_w": {
+                  "type": "integer",
+                  "description": "Thumbnail width in pixels.",
+                  "example": 250
+                },
+                "tn_h": {
+                  "type": "integer",
+                  "description": "Thumbnail height in pixels.",
+                  "example": 211
+                },
+                "filedeleted": {
+                  "type": "integer",
+                  "description": "`1` if the post had a file and that file has been deleted.",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 0
+                },
+                "spoiler": {
+                  "type": "integer",
+                  "description": "`1` if the attachment is spoilered.",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 0
+                },
+                "custom_spoiler": {
+                  "type": "integer",
+                  "description": "Custom spoiler ID `1-10` (only on boards with custom spoilers).",
+                  "minimum": 1,
+                  "maximum": 10,
+                  "example": 1
+                },
+                "replies": {
+                  "type": "integer",
+                  "description": "Total number of replies in the thread (OP only).",
+                  "example": 2
+                },
+                "images": {
+                  "type": "integer",
+                  "description": "Total number of image replies in the thread (OP only).",
+                  "example": 2
+                },
+                "bumplimit": {
+                  "type": "integer",
+                  "description": "`1` once the thread has reached its bump limit (OP only).",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 0
+                },
+                "imagelimit": {
+                  "type": "integer",
+                  "description": "`1` once the thread has reached its image-reply limit (OP only).",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 0
+                },
+                "tag": {
+                  "type": "string",
+                  "description": "Category of `.swf` upload on `/f/` (OP only, `/f/` only).",
+                  "example": "Game"
+                },
+                "semantic_url": {
+                  "type": "string",
+                  "description": "SEO-friendly URL slug for the thread (OP only).",
+                  "example": "welcome-to-po"
+                },
+                "since4pass": {
+                  "type": "integer",
+                  "description": "Year the poster bought a 4chan Pass (only when the poster opted in).",
+                  "example": 2018
+                },
+                "unique_ips": {
+                  "type": "integer",
+                  "description": "Number of unique posters in the thread (OP only, only when the thread is live).",
+                  "example": 1
+                },
+                "m_img": {
+                  "type": "integer",
+                  "description": "`1` if a mobile-optimized variant of the attachment exists.",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 1
+                },
+                "archived": {
+                  "type": "integer",
+                  "description": "`1` once the thread has been archived (OP only).",
+                  "enum": [
+                    0,
+                    1
+                  ],
+                  "example": 1
+                },
+                "archived_on": {
+                  "type": "integer",
+                  "description": "UNIX timestamp the thread was archived (OP only).",
+                  "example": 1566530948
+                },
+                "omitted_posts": {
+                  "type": "integer",
+                  "description": "Replies omitted from a catalog/index preview (OP only on catalog/index responses).",
+                  "example": 1
+                },
+                "omitted_images": {
+                  "type": "integer",
+                  "description": "Image replies omitted from a catalog/index preview (OP only on catalog/index responses).",
+                  "example": 1
+                },
+                "last_modified": {
+                  "type": "integer",
+                  "description": "UNIX timestamp the thread was last modified (OP only on catalog/threadlist responses).",
+                  "example": 1566530948
+                },
+                "last_replies": {
+                  "type": "array",
+                  "description": "Most recent reply objects shown in a catalog preview (OP only on catalog responses).",
+                  "items": {
+                    "$ref": "#/components/schemas/Post"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": [
+    "posts"
+  ]
+}

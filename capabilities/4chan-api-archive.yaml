@@ -1,0 +1,80 @@
+naftiko: "1.0.0-alpha2"
+
+info:
+  label: "4chan Read-Only JSON API — Archive"
+  description: >-
+    Boards — Archive. 1 operation. Lead operation: 4chan Get Board Archive.
+    Self-contained Naftiko capability covering one 4chan business surface.
+  tags:
+    - 4chan
+    - Imageboard
+    - Archive
+  created: "2026-05-28"
+  modified: "2026-05-28"
+
+binds: []
+
+capability:
+
+  consumes:
+    - type: http
+      namespace: 4chan-api-archive
+      baseUri: https://a.4cdn.org
+      description: "4chan Read-Only JSON API — Archive business capability. Self-contained, no shared references."
+      resources:
+        - name: board-archive-json
+          path: /{board}/archive.json
+          operations:
+            - name: getboardarchive
+              method: GET
+              description: 4chan Get Board Archive
+              inputParameters:
+                - name: board
+                  in: path
+                  type: string
+                  required: true
+                  description: Board directory short name. Some boards do not have an archive enabled.
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      namespace: 4chan-api-archive-rest
+      port: 8080
+      description: "REST adapter for 4chan Read-Only JSON API — Archive."
+      resources:
+        - path: /v1/boards/{board}/archive
+          name: board-archive
+          description: REST surface for the per-board archive of OP numbers.
+          operations:
+            - method: GET
+              name: getboardarchive
+              description: 4chan Get Board Archive
+              call: "4chan-api-archive.getboardarchive"
+              with:
+                board: "rest.board"
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      namespace: 4chan-api-archive-mcp
+      port: 9090
+      transport: http
+      description: "MCP adapter for 4chan Read-Only JSON API — Archive."
+      tools:
+        - name: get-board-archive
+          description: 4chan Get Board Archive
+          hints:
+            readOnly: true
+            destructive: false
+            idempotent: true
+          call: "4chan-api-archive.getboardarchive"
+          with:
+            board: "tools.board"
+          outputParameters:
+            - type: object
+              mapping: "$."

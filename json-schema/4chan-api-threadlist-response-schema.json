@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ThreadlistResponse",
+  "description": "Top-level response from `/{board}/threads.json` \u2014 an array of pages, each with its threadlist.",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-schema/4chan-api-threadlist-response-schema.json",
+  "items": {
+    "type": "object",
+    "description": "One index page in a threadlist response.",
+    "required": [
+      "page",
+      "threads"
+    ],
+    "properties": {
+      "page": {
+        "type": "integer",
+        "description": "Index page number this entry belongs to.",
+        "example": 1
+      },
+      "threads": {
+        "type": "array",
+        "description": "Compact thread entries on this page.",
+        "items": {
+          "type": "object",
+          "description": "Compact thread summary used in the per-board threadlist.",
+          "required": [
+            "no",
+            "last_modified",
+            "replies"
+          ],
+          "properties": {
+            "no": {
+              "type": "integer",
+              "description": "Thread OP ID.",
+              "example": 570368
+            },
+            "last_modified": {
+              "type": "integer",
+              "description": "UNIX timestamp the thread was last modified.",
+              "example": 1546294897
+            },
+            "replies": {
+              "type": "integer",
+              "description": "Number of replies in the thread.",
+              "example": 2
+            }
+          }
+        }
+      }
+    }
+  },
+  "type": "array"
+}

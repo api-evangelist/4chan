@@ -1,0 +1,301 @@
+vocabulary: "1.0.0"
+
+info:
+  provider: 4chan
+  description: >-
+    Unified taxonomy for the 4chan Read-Only JSON API. Captures the operational
+    dimension (the six GET endpoints exposed at a.4cdn.org) and the capability
+    dimension (six self-contained Naftiko capabilities, each REST + MCP, covering
+    boards, threadlists, catalogs, archives, board index pages, and individual
+    threads).
+  created: "2026-05-28"
+  modified: "2026-05-28"
+
+# OPERATIONAL DIMENSION
+operational:
+
+  apis:
+    - name: 4chan Read-Only JSON API
+      namespace: 4chan-api
+      version: "2026-05-28"
+      baseUrl: https://a.4cdn.org
+      status: active
+
+  resources:
+    - name: boards
+      api: 4chan-api
+      description: The full directory of 4chan and 4channel boards and their settings.
+      actions: [list]
+    - name: threadlist
+      api: 4chan-api
+      description: Per-board compact list of every live thread (id, last-modified, replies).
+      actions: [list]
+    - name: catalog
+      api: 4chan-api
+      description: Per-board catalog snapshot with OPs plus preview replies, grouped by page.
+      actions: [get]
+    - name: archive
+      api: 4chan-api
+      description: Per-board list of OP numbers for closed, read-only archived threads.
+      actions: [get]
+    - name: index-page
+      api: 4chan-api
+      description: A single board index page (1 to pages) with each thread's OP and preview replies.
+      actions: [get]
+    - name: thread
+      api: 4chan-api
+      description: A single thread (OP plus every reply).
+      actions: [get]
+
+  actions:
+    - name: list
+      verb: list
+      httpMethods: [GET]
+      pattern: read
+      description: Return every entry of a top-level collection.
+    - name: get
+      verb: get
+      httpMethods: [GET]
+      pattern: read
+      description: Return a specific document identified by board / page / thread.
+
+  schemas:
+    core:
+      - Board
+      - BoardsResponse
+      - Post
+      - ThreadResponse
+      - IndexPageResponse
+      - IndexPageThread
+      - CatalogResponse
+      - CatalogPage
+      - ThreadlistResponse
+      - ThreadlistPage
+      - ThreadlistEntry
+      - ArchiveResponse
+      - Cooldowns
+    domains:
+      board-config:
+        - Board
+        - Cooldowns
+      thread:
+        - Post
+        - ThreadResponse
+      catalog:
+        - CatalogResponse
+        - CatalogPage
+      threadlist:
+        - ThreadlistResponse
+        - ThreadlistPage
+        - ThreadlistEntry
+      archive:
+        - ArchiveResponse
+      index:
+        - IndexPageResponse
+        - IndexPageThread
+
+  parameters:
+    identifiers:
+      - name: board
+        location: path
+        type: string
+        description: Board directory short name (`a`, `b`, `g`, `pol`, `po`, …).
+      - name: page
+        location: path
+        type: integer
+        description: Index page number, 1-based.
+      - name: thread
+        location: path
+        type: integer
+        description: OP number of the thread.
+
+  enums:
+    capcodes:
+      - mod
+      - admin
+      - admin_highlight
+      - manager
+      - developer
+      - founder
+    file_extensions:
+      - .jpg
+      - .png
+      - .gif
+      - .pdf
+      - .swf
+      - .webm
+    boolean_flags:
+      - 0
+      - 1
+
+  authentication:
+    schemes: []
+    notes: >-
+      The 4chan Read-Only JSON API requires no authentication. It is fully
+      anonymous and serves the same data that any visitor to boards.4chan.org or
+      boards.4channel.org can see.
+
+# CAPABILITY DIMENSION
+capability:
+
+  workflows:
+    - name: 4chan Boards
+      file: capabilities/4chan-api-boards.yaml
+      description: List every 4chan / 4channel board and its configured settings.
+      apis: [4chan-api]
+      tools: [list-boards]
+      personas: [archivist, researcher, ml-engineer]
+      domains: [imageboard, board-config]
+    - name: 4chan Threadlist
+      file: capabilities/4chan-api-threadlist.yaml
+      description: Cheap polling surface — every live thread on a board with id, last-modified, replies.
+      apis: [4chan-api]
+      tools: [list-board-threadlist]
+      personas: [archivist, researcher]
+      domains: [imageboard, threadlist]
+    - name: 4chan Catalog
+      file: capabilities/4chan-api-catalog.yaml
+      description: Per-board catalog snapshot — every OP with preview replies, grouped by page.
+      apis: [4chan-api]
+      tools: [get-board-catalog]
+      personas: [archivist, researcher, ml-engineer]
+      domains: [imageboard, catalog]
+    - name: 4chan Archive
+      file: capabilities/4chan-api-archive.yaml
+      description: List of closed, read-only OP numbers per board.
+      apis: [4chan-api]
+      tools: [get-board-archive]
+      personas: [archivist]
+      domains: [imageboard, archive]
+    - name: 4chan Index Pages
+      file: capabilities/4chan-api-indexes.yaml
+      description: A single board index page (threads + preview replies) for the requested page number.
+      apis: [4chan-api]
+      tools: [get-board-index-page]
+      personas: [researcher]
+      domains: [imageboard, index]
+    - name: 4chan Threads
+      file: capabilities/4chan-api-threads.yaml
+      description: A full thread (OP and every reply) for the requested board + OP id.
+      apis: [4chan-api]
+      tools: [get-thread]
+      personas: [archivist, researcher, ml-engineer]
+      domains: [imageboard, thread]
+
+  personas:
+    - id: archivist
+      name: Imageboard Archivist
+      description: Mirrors threads and media to durable storage for long-term preservation.
+      workflows:
+        - 4chan Boards
+        - 4chan Threadlist
+        - 4chan Catalog
+        - 4chan Archive
+        - 4chan Threads
+    - id: researcher
+      name: Imageboard Researcher
+      description: Studies posting volume, capcode activity, country flag patterns, board culture.
+      workflows:
+        - 4chan Boards
+        - 4chan Threadlist
+        - 4chan Catalog
+        - 4chan Index Pages
+        - 4chan Threads
+    - id: ml-engineer
+      name: Language-Model / Markov Engineer
+      description: Feeds post comments into text-generation experiments, classifiers, embeddings.
+      workflows:
+        - 4chan Boards
+        - 4chan Catalog
+        - 4chan Threads
+
+  domains:
+    - id: imageboard
+      name: Imageboard
+      description: Anonymous, image-first bulletin-board topology.
+      resources: [boards, threadlist, catalog, archive, index-page, thread]
+    - id: board-config
+      name: Board Configuration
+      description: Per-board settings, cooldowns, and feature flags.
+      resources: [boards]
+    - id: thread
+      name: Thread
+      description: A single OP plus every reply.
+      resources: [thread]
+    - id: catalog
+      name: Catalog
+      description: Per-board snapshot of every OP with preview replies.
+      resources: [catalog]
+    - id: threadlist
+      name: Threadlist
+      description: Per-board compact list of every live thread for cheap polling.
+      resources: [threadlist]
+    - id: archive
+      name: Archive
+      description: Per-board list of archived (closed) OP numbers.
+      resources: [archive]
+    - id: index
+      name: Index Page
+      description: A single index page of a board.
+      resources: [index-page]
+
+  namespaces:
+    - consumes: 4chan-api-boards
+      rest: 4chan-api-boards-rest
+      mcp: 4chan-api-boards-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumes: 4chan-api-threadlist
+      rest: 4chan-api-threadlist-rest
+      mcp: 4chan-api-threadlist-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumes: 4chan-api-catalog
+      rest: 4chan-api-catalog-rest
+      mcp: 4chan-api-catalog-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumes: 4chan-api-archive
+      rest: 4chan-api-archive-rest
+      mcp: 4chan-api-archive-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumes: 4chan-api-indexes
+      rest: 4chan-api-indexes-rest
+      mcp: 4chan-api-indexes-mcp
+      restPort: 8080
+      mcpPort: 9090
+    - consumes: 4chan-api-threads
+      rest: 4chan-api-threads-rest
+      mcp: 4chan-api-threads-mcp
+      restPort: 8080
+      mcpPort: 9090
+
+  binds: []
+
+# CROSS-REFERENCE
+crossReference:
+  - resource: boards
+    operations: [getBoards]
+    workflows: [4chan Boards]
+    personas: [archivist, researcher, ml-engineer]
+  - resource: threadlist
+    operations: [getBoardThreadlist]
+    workflows: [4chan Threadlist]
+    personas: [archivist, researcher]
+  - resource: catalog
+    operations: [getBoardCatalog]
+    workflows: [4chan Catalog]
+    personas: [archivist, researcher, ml-engineer]
+  - resource: archive
+    operations: [getBoardArchive]
+    workflows: [4chan Archive]
+    personas: [archivist]
+  - resource: index-page
+    operations: [getBoardIndexPage]
+    workflows: [4chan Index Pages]
+    personas: [researcher]
+  - resource: thread
+    operations: [getThread]
+    workflows: [4chan Threads]
+    personas: [archivist, researcher, ml-engineer]

@@ -1,0 +1,423 @@
+# 4chan Spectral Ruleset
+#
+# Enforces conventions observed across the 4chan Read-Only JSON API specification
+# at openapi/4chan-api.yml.
+#
+# Convention summary (dominant patterns):
+#   OpenAPI version : 3.0.3
+#   Title prefix    : "4chan ..."
+#   Path casing     : lowercase (paths are static JSON file names + a board / page / thread id)
+#   OperationId     : camelCase
+#   Schema props    : snake_case (mirrors the actual JSON wire format)
+#   Security        : none — fully anonymous, read-only
+#   Methods         : GET only (HEAD and OPTIONS are also supported but not modeled)
+#   Required errors : 304, 404, 503
+extends:
+  - "spectral:oas"
+formats:
+  - oas3
+rules:
+
+  # ─── INFO / METADATA ────────────────────────────────────────────────────────
+  info-title-4chan-prefix:
+    description: API title MUST begin with "4chan ".
+    message: "{{property}} must start with '4chan ' (e.g. '4chan Read-Only JSON API')."
+    severity: warn
+    given: $.info.title
+    then:
+      function: pattern
+      functionOptions:
+        match: "^4chan .+"
+
+  info-description-required:
+    description: API description MUST be present and non-trivial.
+    message: "{{property}} description is required (min 60 chars)."
+    severity: warn
+    given: $.info
+    then:
+      - field: description
+        function: truthy
+      - field: description
+        function: length
+        functionOptions:
+          min: 60
+
+  info-version-required:
+    description: API version MUST be declared in info.version.
+    severity: error
+    given: $.info
+    then:
+      field: version
+      function: truthy
+
+  info-contact-required:
+    description: A contact block with an email MUST be present (api@4chan.org).
+    severity: warn
+    given: $.info
+    then:
+      - field: contact
+        function: truthy
+      - field: contact.email
+        function: truthy
+
+  info-terms-of-service-required:
+    description: termsOfService MUST be set since 4chan publishes API ToS.
+    severity: warn
+    given: $.info
+    then:
+      field: termsOfService
+      function: truthy
+
+  # ─── OPENAPI VERSION ────────────────────────────────────────────────────────
+  openapi-version-3-0-3:
+    description: OpenAPI version SHOULD be 3.0.3.
+    severity: info
+    given: $.openapi
+    then:
+      function: pattern
+      functionOptions:
+        match: "^3\\.0\\.3$"
+
+  # ─── SERVERS ────────────────────────────────────────────────────────────────
+  servers-defined:
+    description: At least one server entry MUST be present and reference a.4cdn.org.
+    severity: error
+    given: $.servers
+    then:
+      - function: truthy
+      - field: "0.url"
+        function: pattern
+        functionOptions:
+          match: "^https?://a\\.4cdn\\.org/?$"
+
+  servers-https-preferred:
+    description: HTTPS server entry SHOULD be present first.
+    severity: warn
+    given: $.servers[0].url
+    then:
+      function: pattern
+      functionOptions:
+        match: "^https://"
+
+  servers-description-required:
+    description: Every server entry MUST have a description.
+    severity: warn
+    given: $.servers[*]
+    then:
+      field: description
+      function: truthy
+
+  # ─── PATHS — NAMING CONVENTIONS ────────────────────────────────────────────
+  paths-no-trailing-slash:
+    description: Paths MUST NOT end with a trailing slash.
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "/$"
+
+  paths-must-end-in-json:
+    description: 4chan paths terminate in `.json` (or use a `{thread}.json` template).
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "\\.json$"
+
+  paths-no-query-strings:
+    description: Paths MUST NOT include a query string — the 4chan API does not accept GET parameters.
+    severity: error
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "\\?"
+
+  paths-lowercase-segments:
+    description: Path segments (other than `{params}`) MUST be lowercase.
+    severity: warn
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(/(\\{[a-zA-Z_]+\\}|[a-z0-9._-]+))+$"
+
+  # ─── OPERATIONS ─────────────────────────────────────────────────────────────
+  operation-operationid-required:
+    description: Every operation MUST declare an operationId.
+    severity: error
+    given: "$.paths.*[get,post,put,patch,delete]"
+    then:
+      field: operationId
+      function: truthy
+
+  operation-operationid-camelcase:
+    description: operationId MUST be camelCase, lead with `get`/`list`/`fetch`.
+    severity: warn
+    given: "$.paths.*[get,post,put,patch,delete].operationId"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(get|list|fetch)[A-Z][A-Za-z0-9]*$"
+
+  operation-summary-required:
+    description: Every operation MUST have a summary.
+    severity: error
+    given: "$.paths.*[get,post,put,patch,delete]"
+    then:
+      field: summary
+      function: truthy
+
+  operation-summary-4chan-prefix:
+    description: Operation summary SHOULD start with "4chan ".
+    severity: warn
+    given: "$.paths.*[get,post,put,patch,delete].summary"
+    then:
+      function: pattern
+      functionOptions:
+        match: "^4chan .+"
+
+  operation-description-required:
+    description: Every operation MUST have a description (min 40 chars).
+    severity: warn
+    given: "$.paths.*[get,post,put,patch,delete]"
+    then:
+      - field: description
+        function: truthy
+      - field: description
+        function: length
+        functionOptions:
+          min: 40
+
+  operation-tags-required:
+    description: Every operation MUST declare at least one tag.
+    severity: error
+    given: "$.paths.*[get,post,put,patch,delete]"
+    then:
+      field: tags
+      function: length
+      functionOptions:
+        min: 1
+
+  operation-only-get-allowed:
+    description: Only GET operations are supported by the 4chan read-only JSON API.
+    message: "The 4chan API only accepts GET, HEAD, and OPTIONS — write methods MUST NOT appear."
+    severity: error
+    given: "$.paths.*"
+    then:
+      function: undefined
+      field: post
+    where:
+      field: post
+      function: truthy
+
+  operation-microcks-extension-present:
+    description: Each operation SHOULD declare `x-microcks-operation` for mock compatibility.
+    severity: info
+    given: "$.paths.*[get]"
+    then:
+      field: x-microcks-operation
+      function: truthy
+
+  # ─── TAGS ───────────────────────────────────────────────────────────────────
+  tags-defined-globally:
+    description: Global `tags` array MUST be defined.
+    severity: warn
+    given: $.tags
+    then:
+      function: truthy
+
+  tag-description-required:
+    description: Every global tag MUST have a description.
+    severity: warn
+    given: $.tags[*]
+    then:
+      field: description
+      function: truthy
+
+  tag-title-case:
+    description: Tag names SHOULD use Title Case.
+    severity: info
+    given: $.tags[*].name
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[A-Z][A-Za-z0-9 -]*$"
+
+  # ─── PARAMETERS ─────────────────────────────────────────────────────────────
+  parameter-description-required:
+    description: Every path parameter MUST have a description.
+    severity: warn
+    given: $.components.parameters[*]
+    then:
+      field: description
+      function: truthy
+
+  parameter-schema-required:
+    description: Every path parameter MUST declare a schema with a concrete type.
+    severity: error
+    given: $.components.parameters[*]
+    then:
+      - field: schema
+        function: truthy
+      - field: schema.type
+        function: truthy
+
+  parameter-example-required:
+    description: Every path parameter SHOULD provide an example value.
+    severity: info
+    given: $.components.parameters[*]
+    then:
+      field: example
+      function: truthy
+
+  parameter-snake-case-names:
+    description: Path parameter names SHOULD be short and lowercase.
+    severity: info
+    given: $.components.parameters[*].name
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-z0-9_]*$"
+
+  # ─── RESPONSES ──────────────────────────────────────────────────────────────
+  response-200-required:
+    description: Every operation MUST define a `200` response.
+    severity: error
+    given: "$.paths.*[get].responses"
+    then:
+      field: "200"
+      function: truthy
+
+  response-304-recommended:
+    description: GET operations SHOULD document the `304 Not Modified` response, since clients are required to use If-Modified-Since.
+    severity: warn
+    given: "$.paths.*[get].responses"
+    then:
+      field: "304"
+      function: truthy
+
+  response-404-required:
+    description: GET operations MUST document `404 Not Found`.
+    severity: warn
+    given: "$.paths.*[get].responses"
+    then:
+      field: "404"
+      function: truthy
+
+  response-503-recommended:
+    description: GET operations SHOULD document `503 Service Unavailable` (rate-limit back-pressure).
+    severity: warn
+    given: "$.paths.*[get].responses"
+    then:
+      field: "503"
+      function: truthy
+
+  response-description-required:
+    description: Every response MUST have a description.
+    severity: error
+    given: "$.paths.*[get].responses.*"
+    then:
+      field: description
+      function: truthy
+
+  response-json-content-type:
+    description: 2xx responses MUST use `application/json`.
+    severity: error
+    given: "$.paths.*[get].responses.200.content"
+    then:
+      field: "application/json"
+      function: truthy
+
+  response-200-example-required:
+    description: 200 responses SHOULD include a named example for Microcks mocking.
+    severity: info
+    given: "$.paths.*[get].responses.200.content.application/json"
+    then:
+      field: examples
+      function: truthy
+
+  # ─── SCHEMAS — PROPERTY NAMING ─────────────────────────────────────────────
+  schema-snake-case-properties:
+    description: Schema property names MUST be snake_case (mirrors the actual 4chan JSON wire format).
+    severity: warn
+    given: $.components.schemas[*].properties.*~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z][a-z0-9_]*$"
+
+  schema-description-required:
+    description: Every top-level schema MUST have a description.
+    severity: warn
+    given: $.components.schemas[*]
+    then:
+      field: description
+      function: truthy
+
+  schema-type-required:
+    description: Every top-level schema MUST declare a type.
+    severity: error
+    given: $.components.schemas[*]
+    then:
+      field: type
+      function: truthy
+
+  schema-properties-have-types:
+    description: Every object property MUST declare a type (or be a $ref).
+    severity: warn
+    given: $.components.schemas[?(@.type=='object')].properties[?(!@.['$ref'])]
+    then:
+      field: type
+      function: truthy
+
+  schema-properties-have-descriptions:
+    description: Every object property SHOULD have a description.
+    severity: info
+    given: $.components.schemas[?(@.type=='object')].properties[?(!@.['$ref'])]
+    then:
+      field: description
+      function: truthy
+
+  # ─── SECURITY ───────────────────────────────────────────────────────────────
+  security-must-be-absent:
+    description: The 4chan API is anonymous — `security` MUST NOT be declared.
+    message: "4chan is fully read-only and anonymous; do not declare security requirements."
+    severity: warn
+    given: $.security
+    then:
+      function: falsy
+
+  security-schemes-must-be-absent:
+    description: No `securitySchemes` should be defined — there is no auth surface.
+    severity: warn
+    given: $.components.securitySchemes
+    then:
+      function: falsy
+
+  # ─── HTTP METHOD CONVENTIONS ───────────────────────────────────────────────
+  get-no-request-body:
+    description: GET operations MUST NOT define a request body.
+    severity: error
+    given: "$.paths.*[get]"
+    then:
+      field: requestBody
+      function: falsy
+
+  # ─── GENERAL QUALITY ───────────────────────────────────────────────────────
+  no-empty-descriptions:
+    description: Descriptions MUST NOT be empty strings.
+    severity: warn
+    given: "$..description"
+    then:
+      function: truthy
+
+  external-docs-encouraged:
+    description: An `externalDocs` block linking to https://github.com/4chan/4chan-API is encouraged.
+    severity: info
+    given: $
+    then:
+      field: externalDocs
+      function: truthy

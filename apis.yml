@@ -1,32 +1,182 @@
 aid: 4chan
 name: 4chan
-description: "Simple image-based bulletin board dedicated to a variety of topics"
+description: >-
+  4chan is a simple image-based bulletin board where anyone can post comments and share images
+  across topic-specific boards. 4chan exposes a read-only JSON API (launched September 2012)
+  that serves the same board, thread, catalog, and archive data consumed by the public site
+  via static JSON files at a.4cdn.org. The API supports GET/HEAD/OPTIONS only — there is no
+  posting, authentication, or write surface.
 url: https://github.com/4chan/4chan-API
+image: https://s.4cdn.org/image/fp/logo-transparent.png
 specificationVersion: '0.20'
 created: '2026-05-28'
 modified: '2026-05-28'
 x-source: public-apis/public-apis
-x-category: "Social"
-x-tier: 3
-x-tier-reason: bulk-registered-from-public-apis
+x-type: company
+x-category: Social
+x-tier: 2
+x-tier-reason: documented-read-only-json-api-with-active-community-clients
 tags:
   - Social
+  - Bulletin Board
+  - Imageboard
+  - Read Only
+  - JSON
   - Public APIs
+  - Community
 apis:
-  - name: 4chan
-    description: "Simple image-based bulletin board dedicated to a variety of topics"
+  - name: 4chan Read-Only JSON API
+    description: >-
+      Read-only HTTP JSON API serving boards.json, threads.json, catalog.json, archive.json,
+      board index pages, and individual thread documents from a.4cdn.org. Mirrors the data
+      visible at boards.4chan.org / boards.4channel.org. No authentication, no write
+      operations. CORS allowed only from boards.4chan.org and boards.4channel.org origins.
     humanURL: https://github.com/4chan/4chan-API
-    baseURL: https://github.com/4chan/4chan-API
+    baseURL: https://a.4cdn.org
+    image: https://s.4cdn.org/image/fp/logo-transparent.png
     tags:
       - Social
+      - Imageboard
+      - Read Only
     properties:
       - type: Documentation
         url: https://github.com/4chan/4chan-API
+      - type: OpenAPI
+        url: openapi/4chan-api.yml
+      - type: SignUp
+        url: https://github.com/4chan/4chan-API#api-rules
+      - type: Support
+        url: mailto:api@4chan.org
+      - type: TermsOfService
+        url: https://github.com/4chan/4chan-API#api-terms-of-service
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-boards.yaml
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-threadlist.yaml
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-catalog.yaml
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-archive.yaml
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-indexes.yaml
+      - type: NaftikoCapability
+        url: capabilities/4chan-api-threads.yaml
 common:
   - type: Website
+    url: https://www.4chan.org
+  - type: Documentation
     url: https://github.com/4chan/4chan-API
+  - type: GitHubOrganization
+    url: https://github.com/4chan
+  - type: SourceCode
+    url: https://github.com/4chan/4chan-JS
+    title: 4chan native browser extension source
+  - type: ContactEmail
+    url: mailto:api@4chan.org
+  - type: Tools
+    title: MCP Server (community, unofficial)
+    url: https://github.com/sh0n0/chan-mcp-server
+  - type: SDK
+    title: Python Wrapper (BASC-py4chan, community)
+    url: https://github.com/bibanon/BASC-py4chan
+  - type: SDK
+    title: Python Wrapper (py-4chan, community)
+    url: https://github.com/e000/py-4chan
+  - type: SDK
+    title: Node.js Client (4chanjs, community)
+    url: https://github.com/yocontra/4chanjs
+  - type: SDK
+    title: Go Client (go-4chan-api, community)
+    url: https://github.com/moshee/go-4chan-api
+  - type: SDK
+    title: Rust Client (rchan, community)
+    url: https://github.com/insomnimus/rchan
+  - type: SDK
+    title: Racket Client (yotsubAPI, community)
+    url: https://github.com/g-gundam/yotsubAPI
+  - type: Tools
+    title: BA Thread Archiver (community)
+    url: https://github.com/hydrusnetwork/BA-4chan-thread-archiver
   - type: PublicAPIsListing
     url: https://github.com/public-apis/public-apis
+  - type: Plans
+    url: plans/4chan-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/4chan-rate-limits.yml
+  - type: Vocabulary
+    url: vocabulary/4chan-vocabulary.yml
+  - type: SpectralRules
+    url: rules/4chan-rules.yml
+  - type: JSONLD
+    url: json-ld/4chan-context.jsonld
+features:
+  - name: Read-Only JSON Catalog
+    description: >-
+      Static JSON representations of boards, threads, catalogs, and archives are served from
+      a.4cdn.org; clients use standard HTTP semantics including If-Modified-Since for caching.
+  - name: No Authentication
+    description: >-
+      The API requires no API key, no token, and no account; it is fully anonymous and serves
+      the same data visible to anonymous web visitors.
+  - name: HTTP Caching Built In
+    description: >-
+      The API requires clients to send If-Modified-Since headers on repeated requests, allowing
+      304 Not Modified responses and reducing server load.
+  - name: CORS Restricted to 4chan Origins
+    description: >-
+      CORS is enabled but only for origins boards.4chan.org and boards.4channel.org via HTTP or
+      HTTPS; only GET/OPTIONS/HEAD methods are accepted.
+  - name: Per-Board Catalog
+    description: >-
+      Every board (a, b, g, pol, po, etc.) exposes catalog, threadlist, archive, and per-page
+      index endpoints with the same shape, making bulk crawling trivial.
+  - name: Static Media Domains
+    description: >-
+      User-uploaded images and thumbnails live at i.4cdn.org/{board}/{tim}.{ext}; static site
+      assets including flags, spoiler images, and capcode icons live at s.4cdn.org.
+useCases:
+  - name: Read-Only Board Crawlers
+    description: >-
+      Build research crawlers that periodically snapshot board catalogs, threads, and archives
+      while respecting the 1 request per second limit and 10 second per-thread refresh floor.
+  - name: Thread Archivers
+    description: >-
+      Mirror archived threads and their attached media to durable storage for academic study or
+      cultural preservation (see BA Thread Archiver, Ayase / Asagi).
+  - name: Imageboard Analytics
+    description: >-
+      Use threads.json and catalog.json to chart posting volume, reply velocity, and
+      moderator/admin capcode activity across boards over time.
+  - name: Language Models and Markov Chains
+    description: >-
+      Feed cleaned post comments from catalog.json and thread.json into text generation
+      experiments (see 4chanMarkovText).
+  - name: Static Site Mirrors
+    description: >-
+      Combine boards.json + per-board catalog/thread JSON to build static site mirrors of
+      individual threads suitable for read-only display.
+integrations:
+  - name: BASC-py4chan
+    description: Python wrapper providing Pythonic access to boards, threads, and posts.
+  - name: 4chanjs
+    description: Node.js and browser client for the 4chan JSON API.
+  - name: go-4chan-api
+    description: Go client for crawling and consuming 4chan board JSON.
+  - name: rchan
+    description: Rust crate exposing typed boards/threads/posts and a basic client.
+  - name: Ayase / Asagi
+    description: Archive middleware that ingests 4chan JSON and stores posts in SQL for replay.
+  - name: chan-mcp-server (community)
+    description: Unofficial Model Context Protocol server exposing 4chan boards/threads/catalog as MCP tools.
+solutions:
+  - name: Imageboard Research Archive
+    description: >-
+      Combine threads.json polling with archive.json snapshots and i.4cdn.org media downloads
+      to build a long-term archive that respects the published rate limits.
+  - name: Capcode Activity Dashboard
+    description: >-
+      Use catalog.json/thread.json capcode and id fields to surface moderator and admin
+      activity per board over time.
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

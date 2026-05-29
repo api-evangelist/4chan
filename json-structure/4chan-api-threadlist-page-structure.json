@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-structure.org/meta/core/v0/#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/4chan/refs/heads/main/json-structure/4chan-api-threadlist-page-structure.json",
+  "name": "ThreadlistPage",
+  "description": "One index page in a threadlist response.",
+  "type": "object",
+  "properties": {
+    "page": {
+      "type": "int32",
+      "description": "Index page number this entry belongs to.",
+      "example": 1
+    },
+    "threads": {
+      "type": "array",
+      "description": "Compact thread entries on this page.",
+      "items": {
+        "type": "object",
+        "description": "Compact thread summary used in the per-board threadlist.",
+        "required": [
+          "no",
+          "last_modified",
+          "replies"
+        ],
+        "properties": {
+          "no": {
+            "type": "int32",
+            "description": "Thread OP ID.",
+            "example": 570368
+          },
+          "last_modified": {
+            "type": "int32",
+            "description": "UNIX timestamp the thread was last modified.",
+            "example": 1546294897
+          },
+          "replies": {
+            "type": "int32",
+            "description": "Number of replies in the thread.",
+            "example": 2
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "page",
+    "threads"
+  ]
+}

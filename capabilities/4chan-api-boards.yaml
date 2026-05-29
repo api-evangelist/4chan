@@ -1,0 +1,72 @@
+naftiko: "1.0.0-alpha2"
+
+info:
+  label: "4chan Read-Only JSON API — Boards"
+  description: >-
+    Boards — Boards. 1 operation. Lead operation: 4chan List All Boards.
+    Self-contained Naftiko capability covering one 4chan business surface.
+  tags:
+    - 4chan
+    - Imageboard
+    - Boards
+  created: "2026-05-28"
+  modified: "2026-05-28"
+
+binds: []
+
+capability:
+
+  consumes:
+    - type: http
+      namespace: 4chan-api-boards
+      baseUri: https://a.4cdn.org
+      description: "4chan Read-Only JSON API — Boards business capability. Self-contained, no shared references."
+      resources:
+        - name: boards-json
+          path: /boards.json
+          operations:
+            - name: getboards
+              method: GET
+              description: 4chan List All Boards
+              outputRawFormat: json
+              outputParameters:
+                - name: result
+                  type: object
+                  value: "$."
+
+  exposes:
+    - type: rest
+      namespace: 4chan-api-boards-rest
+      port: 8080
+      description: "REST adapter for 4chan Read-Only JSON API — Boards. One Spectral-compliant resource per consumed operation, prefixed with /v1."
+      resources:
+        - path: /v1/boards
+          name: boards
+          description: REST surface for the 4chan board directory.
+          operations:
+            - method: GET
+              name: getboards
+              description: 4chan List All Boards
+              call: "4chan-api-boards.getboards"
+              with: {}
+              outputParameters:
+                - type: object
+                  mapping: "$."
+
+    - type: mcp
+      namespace: 4chan-api-boards-mcp
+      port: 9090
+      transport: http
+      description: "MCP adapter for 4chan Read-Only JSON API — Boards. One tool per consumed operation, routed inline through this capability's consumes block."
+      tools:
+        - name: list-boards
+          description: 4chan List All Boards
+          hints:
+            readOnly: true
+            destructive: false
+            idempotent: true
+          call: "4chan-api-boards.getboards"
+          with: {}
+          outputParameters:
+            - type: object
+              mapping: "$."

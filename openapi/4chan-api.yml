@@ -1,0 +1,948 @@
+openapi: 3.0.3
+info:
+  title: 4chan Read-Only JSON API
+  description: >-
+    Read-only JSON API for the 4chan and 4channel imageboards, originally launched in
+    September 2012. All endpoints are served as static JSON documents from
+    `a.4cdn.org` over `http://` or `https://`. The API exposes only the public,
+    anonymous read surface of the site: board metadata, board catalogs, board
+    threadlists, archive listings, board index pages, and individual thread documents.
+
+    There is no authentication, no posting, and no per-user write surface. Only
+    `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins
+    `boards.4chan.org` and `boards.4channel.org`.
+
+    Clients MUST send no more than one request per second, MUST set
+    thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD
+    use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.
+  version: '2026-05-28'
+  termsOfService: https://github.com/4chan/4chan-API#api-terms-of-service
+  contact:
+    name: 4chan API
+    email: api@4chan.org
+    url: https://github.com/4chan/4chan-API
+  license:
+    name: 4chan API Terms of Service
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+  x-generated-from: documentation
+  x-source-url: https://github.com/4chan/4chan-API
+  x-last-validated: '2026-05-28'
+servers:
+- url: https://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTPS).
+- url: http://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTP, legacy clients only).
+tags:
+- name: Boards
+  description: List of all boards on 4chan and 4channel and their per-board settings.
+- name: Threadlist
+  description: Per-board summary list of every live thread (id, last-modified, reply count) grouped by index page.
+- name: Catalog
+  description: Per-board catalog snapshot containing every OP and its preview replies, grouped by index page.
+- name: Archive
+  description: Per-board list of OP numbers for closed, archived threads.
+- name: Indexes
+  description: Per-board, per-page index document of threads (each with a posts array including the OP and a small number of preview replies).
+- name: Threads
+  description: Single-thread document containing the OP and every reply.
+paths:
+  /boards.json:
+    get:
+      operationId: getBoards
+      summary: 4chan List All Boards
+      description: >-
+        Returns the comprehensive list of all 4chan and 4channel boards and their
+        major settings (page count, per-page thread count, bump/image limits,
+        cooldowns, feature flags, etc.). This is the canonical bootstrap call for
+        any client — every other endpoint requires a board directory name from
+        this document.
+      tags:
+      - Boards
+      responses:
+        '200':
+          description: Successful response. Returns the full boards list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardsResponse'
+              examples:
+                GetBoards200Example:
+                  summary: Default getBoards 200 response
+                  x-microcks-default: true
+                  value:
+                    boards:
+                    - board: a
+                      title: Anime & Manga
+                      ws_board: 1
+                      per_page: 15
+                      pages: 10
+                      max_filesize: 4194304
+                      max_webm_filesize: 3145728
+                      max_comment_chars: 2000
+                      max_webm_duration: 120
+                      bump_limit: 500
+                      image_limit: 300
+                      cooldowns:
+                        threads: 600
+                        replies: 60
+                        images: 60
+                      meta_description: "\"/a/ - Anime & Manga\" is 4chan's imageboard dedicated to the discussion of Japanese animation and manga."
+                      spoilers: 1
+                      custom_spoilers: 1
+                      is_archived: 1
+                    - board: po
+                      title: Papercraft & Origami
+                      ws_board: 1
+                      per_page: 15
+                      pages: 10
+                      max_filesize: 4194304
+                      max_webm_filesize: 3145728
+                      max_comment_chars: 2000
+                      max_webm_duration: 120
+                      bump_limit: 500
+                      image_limit: 300
+                      cooldowns:
+                        threads: 600
+                        replies: 60
+                        images: 60
+                      meta_description: "\"/po/ - Papercraft & Origami\" is 4chan's imageboard for paper engineering."
+                      is_archived: 1
+        '304':
+          description: Not Modified. Returned when an `If-Modified-Since` header matched.
+        '404':
+          description: Not Found.
+        '503':
+          description: Service Unavailable (rate limited or back-pressure).
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /{board}/threads.json:
+    get:
+      operationId: getBoardThreadlist
+      summary: 4chan Get Board Threadlist
+      description: >-
+        Returns a compact list of every live thread on the given board grouped by
+        index page. Each thread entry contains only the OP number (`no`), the
+        last-modified UNIX timestamp, and the reply count. Use this endpoint to
+        detect new and updated threads cheaply; fetch the full thread or catalog
+        only when `last_modified` changes.
+      tags:
+      - Threadlist
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      responses:
+        '200':
+          description: Successful response. Returns the threadlist grouped by index page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadlistResponse'
+              examples:
+                GetBoardThreadlist200Example:
+                  summary: Default getBoardThreadlist 200 response
+                  x-microcks-default: true
+                  value:
+                  - page: 1
+                    threads:
+                    - no: 570368
+                      last_modified: 1546294897
+                      replies: 2
+                    - no: 574933
+                      last_modified: 1566530948
+                      replies: 228
+                  - page: 2
+                    threads:
+                    - no: 568362
+                      last_modified: 1566367619
+                      replies: 55
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /{board}/catalog.json:
+    get:
+      operationId: getBoardCatalog
+      summary: 4chan Get Board Catalog
+      description: >-
+        Returns the full catalog snapshot for the given board: every OP with its
+        attributes and a short list of preview replies, grouped by index page. This
+        is the largest per-board document and mirrors the public catalog page at
+        `boards.4channel.org/{board}/catalog`.
+      tags:
+      - Catalog
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      responses:
+        '200':
+          description: Successful response. Returns the catalog as an array of pages.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogResponse'
+              examples:
+                GetBoardCatalog200Example:
+                  summary: Default getBoardCatalog 200 response
+                  x-microcks-default: true
+                  value:
+                  - page: 1
+                    threads:
+                    - no: 570368
+                      sticky: 1
+                      closed: 1
+                      now: 12/31/18(Mon)17:05:48
+                      name: Anonymous
+                      sub: Welcome to /po/!
+                      com: Welcome to /po/! We specialize in origami, papercraft, and everything that's relevant to paper engineering.
+                      filename: yotsuba_folding
+                      ext: .png
+                      w: 530
+                      h: 449
+                      tn_w: 250
+                      tn_h: 211
+                      tim: 1546293948883
+                      time: 1546293948
+                      md5: uZUeZeB14FVR+Mc2ScHvVA==
+                      fsize: 516657
+                      resto: 0
+                      capcode: mod
+                      semantic_url: welcome-to-po
+                      replies: 2
+                      images: 2
+                      omitted_posts: 0
+                      omitted_images: 0
+                      last_replies:
+                      - no: 570371
+                        now: 12/31/18(Mon)17:21:29
+                        name: Anonymous
+                        com: FAQ reply.
+                        time: 1546294889
+                        resto: 570368
+                      last_modified: 1546294897
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /{board}/archive.json:
+    get:
+      operationId: getBoardArchive
+      summary: 4chan Get Board Archive
+      description: >-
+        Returns the list of archived (closed, read-only) thread OP numbers for the
+        given board. Archived threads remain viewable until 4chan automatically
+        deletes them. Not every board has archives enabled — boards without an
+        archive return 404.
+      tags:
+      - Archive
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      responses:
+        '200':
+          description: Successful response. Returns an array of archived OP numbers.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveResponse'
+              examples:
+                GetBoardArchive200Example:
+                  summary: Default getBoardArchive 200 response
+                  x-microcks-default: true
+                  value:
+                  - 571958
+                  - 572866
+                  - 574195
+                  - 574342
+                  - 574378
+                  - 574398
+                  - 574417
+                  - 574426
+                  - 574435
+                  - 574453
+                  - 574486
+                  - 574510
+                  - 574586
+                  - 574588
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found or archive not enabled for this board.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /{board}/{page}.json:
+    get:
+      operationId: getBoardIndexPage
+      summary: 4chan Get Board Index Page
+      description: >-
+        Returns a single index page for the given board. Each index page contains
+        an array of threads, and each thread contains its OP plus a small number
+        of preview replies. The maximum page number for a board comes from the
+        `pages` field on the matching entry in `/boards.json`.
+      tags:
+      - Indexes
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      - $ref: '#/components/parameters/PagePath'
+      responses:
+        '200':
+          description: Successful response. Returns the page's threads.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndexPageResponse'
+              examples:
+                GetBoardIndexPage200Example:
+                  summary: Default getBoardIndexPage 200 response
+                  x-microcks-default: true
+                  value:
+                    threads:
+                    - posts:
+                      - no: 570368
+                        sticky: 1
+                        closed: 1
+                        now: 12/31/18(Mon)17:05:48
+                        name: Anonymous
+                        sub: Welcome to /po/!
+                        com: Welcome to /po/!
+                        filename: yotsuba_folding
+                        ext: .png
+                        w: 530
+                        h: 449
+                        tn_w: 250
+                        tn_h: 211
+                        tim: 1546293948883
+                        time: 1546293948
+                        md5: uZUeZeB14FVR+Mc2ScHvVA==
+                        fsize: 516657
+                        resto: 0
+                        capcode: mod
+                        semantic_url: welcome-to-po
+                        replies: 2
+                        images: 2
+                        unique_ips: 1
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found or page out of range.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /{board}/thread/{thread}.json:
+    get:
+      operationId: getThread
+      summary: 4chan Get Thread
+      description: >-
+        Returns the full document for a single thread on the given board: the OP
+        post object followed by every reply. To poll a thread for new replies,
+        send `If-Modified-Since` on subsequent requests and treat `304` as "no
+        change"; the minimum polling interval per the 4chan API rules is 10
+        seconds, with longer intervals preferred.
+      tags:
+      - Threads
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      - $ref: '#/components/parameters/ThreadPath'
+      responses:
+        '200':
+          description: Successful response. Returns the thread's posts array.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadResponse'
+              examples:
+                GetThread200Example:
+                  summary: Default getThread 200 response
+                  x-microcks-default: true
+                  value:
+                    posts:
+                    - no: 570368
+                      sticky: 1
+                      closed: 1
+                      now: 12/31/18(Mon)17:05:48
+                      name: Anonymous
+                      sub: Welcome to /po/!
+                      com: Welcome to /po/! We specialize in origami and papercraft.
+                      filename: yotsuba_folding
+                      ext: .png
+                      w: 530
+                      h: 449
+                      tn_w: 250
+                      tn_h: 211
+                      tim: 1546293948883
+                      time: 1546293948
+                      md5: uZUeZeB14FVR+Mc2ScHvVA==
+                      fsize: 516657
+                      resto: 0
+                      capcode: mod
+                      semantic_url: welcome-to-po
+                      replies: 2
+                      images: 2
+                      unique_ips: 1
+                    - no: 570370
+                      now: 12/31/18(Mon)17:14:56
+                      name: Anonymous
+                      com: FAQs about papercraft.
+                      filename: papercraft faq
+                      ext: .png
+                      w: 318
+                      h: 704
+                      tn_w: 56
+                      tn_h: 125
+                      tim: 1546294496751
+                      time: 1546294496
+                      md5: 0EqXBb4gGIyzQiaApMdFAA==
+                      fsize: 285358
+                      resto: 570368
+                      capcode: mod
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found or thread does not exist.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: >-
+        Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The
+        full list of valid values is the `board` field on each entry in
+        `/boards.json`.
+      schema:
+        type: string
+        pattern: '^[a-z0-9]+$'
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po
+    PagePath:
+      name: page
+      in: path
+      required: true
+      description: >-
+        Index page number, starting at `1`. The maximum value is the `pages`
+        field on the matching entry in `/boards.json` (commonly 10 or 15).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 20
+        example: 3
+      example: 3
+    ThreadPath:
+      name: thread
+      in: path
+      required: true
+      description: The OP number of the thread to retrieve.
+      schema:
+        type: integer
+        minimum: 1
+        example: 570368
+      example: 570368
+  schemas:
+    Cooldowns:
+      type: object
+      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
+      properties:
+        threads:
+          type: integer
+          description: Minimum seconds between consecutive thread creations from the same poster.
+          example: 600
+        replies:
+          type: integer
+          description: Minimum seconds between consecutive replies from the same poster.
+          example: 60
+        images:
+          type: integer
+          description: Minimum seconds between consecutive image posts from the same poster.
+          example: 60
+    Board:
+      type: object
+      description: A single board on 4chan or 4channel and its configured settings.
+      required:
+      - board
+      - title
+      - ws_board
+      - per_page
+      - pages
+      - max_filesize
+      - max_webm_filesize
+      - max_comment_chars
+      - max_webm_duration
+      - bump_limit
+      - image_limit
+      - cooldowns
+      - meta_description
+      properties:
+        board:
+          type: string
+          description: Board directory short name (used as the path segment for all per-board endpoints).
+          example: a
+        title:
+          type: string
+          description: Human-readable board title displayed at the top of the board.
+          example: Anime & Manga
+        ws_board:
+          type: integer
+          description: '`1` if the board is worksafe, `0` otherwise.'
+          enum: [0, 1]
+          example: 1
+        per_page:
+          type: integer
+          description: Number of threads displayed on a single index page.
+          example: 15
+        pages:
+          type: integer
+          description: Total number of index pages on the board.
+          example: 10
+        max_filesize:
+          type: integer
+          description: Maximum file size allowed for non-`.webm` attachments, in bytes.
+          example: 4194304
+        max_webm_filesize:
+          type: integer
+          description: Maximum file size allowed for `.webm` attachments, in bytes.
+          example: 3145728
+        max_comment_chars:
+          type: integer
+          description: Maximum number of characters allowed in a single post comment.
+          example: 2000
+        max_webm_duration:
+          type: integer
+          description: Maximum allowed duration of a `.webm` attachment, in seconds.
+          example: 120
+        bump_limit:
+          type: integer
+          description: Maximum number of replies before a thread stops bumping to the top.
+          example: 500
+        image_limit:
+          type: integer
+          description: Maximum number of image replies before further image replies are discarded.
+          example: 300
+        cooldowns:
+          $ref: '#/components/schemas/Cooldowns'
+        meta_description:
+          type: string
+          description: SEO `<meta>` description content for the board's catalog page.
+          example: '"/a/ - Anime & Manga" is 4chan''s imageboard dedicated to the discussion of Japanese animation and manga.'
+        spoilers:
+          type: integer
+          description: '`1` if spoilered images are enabled on this board.'
+          enum: [0, 1]
+          example: 1
+        custom_spoilers:
+          type: integer
+          description: Number of custom spoiler image variants the board provides.
+          example: 1
+        is_archived:
+          type: integer
+          description: '`1` if the board has its archive enabled.'
+          enum: [0, 1]
+          example: 1
+        board_flags:
+          type: object
+          description: Map of board-specific flag codes to human-readable flag names.
+          additionalProperties:
+            type: string
+          example:
+            AB: Flag Name AB
+            XY: Flag Name XY
+        country_flags:
+          type: integer
+          description: '`1` if poster country flags are enabled on this board.'
+          enum: [0, 1]
+          example: 0
+        user_ids:
+          type: integer
+          description: '`1` if per-thread poster ID tags are enabled.'
+          enum: [0, 1]
+          example: 0
+        oekaki:
+          type: integer
+          description: '`1` if users can submit drawings via the in-browser Oekaki app.'
+          enum: [0, 1]
+          example: 0
+        sjis_tags:
+          type: integer
+          description: '`1` if the `[sjis]` Shift-JIS drawing tag is supported.'
+          enum: [0, 1]
+          example: 0
+        code_tags:
+          type: integer
+          description: '`1` if `[code]` syntax-highlighted blocks are supported.'
+          enum: [0, 1]
+          example: 0
+        math_tags:
+          type: integer
+          description: '`1` if `[math]` / `[eqn]` TeX rendering is supported.'
+          enum: [0, 1]
+          example: 0
+        text_only:
+          type: integer
+          description: '`1` if image posting is disabled on the board.'
+          enum: [0, 1]
+          example: 0
+        forced_anon:
+          type: integer
+          description: '`1` if the name field is disabled on the board.'
+          enum: [0, 1]
+          example: 0
+        webm_audio:
+          type: integer
+          description: '`1` if `.webm` files with audio tracks are allowed.'
+          enum: [0, 1]
+          example: 0
+        require_subject:
+          type: integer
+          description: '`1` if OPs are required to include a subject.'
+          enum: [0, 1]
+          example: 0
+        min_image_width:
+          type: integer
+          description: Minimum allowed width of uploaded images, in pixels.
+          example: 100
+        min_image_height:
+          type: integer
+          description: Minimum allowed height of uploaded images, in pixels.
+          example: 100
+    BoardsResponse:
+      type: object
+      description: Top-level response from `/boards.json`.
+      required:
+      - boards
+      properties:
+        boards:
+          type: array
+          description: Every board on 4chan and 4channel.
+          items:
+            $ref: '#/components/schemas/Board'
+    Post:
+      type: object
+      description: >-
+        A single post — either an OP (when `resto == 0`) or a reply (when `resto`
+        is the OP id). Many fields appear only on OPs (`replies`, `images`,
+        `sticky`, `closed`, `archived`, …) or only on posts with an attached
+        file.
+      required:
+      - 'no'
+      - resto
+      - now
+      - time
+      - name
+      properties:
+        'no':
+          type: integer
+          description: Numeric post ID.
+          example: 570368
+        resto:
+          type: integer
+          description: For replies, the OP ID this post replies to. For OPs, `0`.
+          example: 0
+        sticky:
+          type: integer
+          description: '`1` if the thread is pinned to the top of the board (OP only).'
+          enum: [0, 1]
+          example: 1
+        closed:
+          type: integer
+          description: '`1` if the thread is closed to new replies (OP only).'
+          enum: [0, 1]
+          example: 1
+        now:
+          type: string
+          description: Localized post timestamp in `MM/DD/YY(Day)HH:MM` (or `HH:MM:SS`) format, EST/EDT.
+          example: 12/31/18(Mon)17:05:48
+        time:
+          type: integer
+          description: UNIX timestamp the post was created.
+          example: 1546293948
+        name:
+          type: string
+          description: Display name used for the post (defaults to `Anonymous`).
+          example: Anonymous
+        trip:
+          type: string
+          description: 'User tripcode in the form `!tripcode` or `!!securetripcode`.'
+          example: '!K.WeEabc'
+        id:
+          type: string
+          description: Poster ID (8 chars) — present only when the board has per-thread poster IDs enabled.
+          example: ABcd1234
+        capcode:
+          type: string
+          description: Staff capcode on the post.
+          enum:
+          - mod
+          - admin
+          - admin_highlight
+          - manager
+          - developer
+          - founder
+          example: mod
+        country:
+          type: string
+          description: ISO 3166-1 alpha-2 country code of the poster, or `XX` if unknown.
+          example: US
+        country_name:
+          type: string
+          description: Human-readable country name of the poster.
+          example: United States
+        board_flag:
+          type: string
+          description: Board-specific flag code (only on boards with board flags enabled).
+          example: AB
+        flag_name:
+          type: string
+          description: Board-specific flag display name.
+          example: Flag Name AB
+        sub:
+          type: string
+          description: OP subject (OP only, when set).
+          example: Welcome to /po/!
+        com:
+          type: string
+          description: Post comment as HTML-escaped string.
+          example: 'Welcome to /po/! We specialize in origami, papercraft, and everything that''s relevant to paper engineering.'
+        tim:
+          type: integer
+          description: UNIX timestamp + microtime that the attachment was uploaded — also the file ID for `i.4cdn.org`.
+          example: 1546293948883
+        filename:
+          type: string
+          description: Original filename of the attachment as uploaded.
+          example: yotsuba_folding
+        ext:
+          type: string
+          description: Attachment file extension.
+          enum:
+          - .jpg
+          - .png
+          - .gif
+          - .pdf
+          - .swf
+          - .webm
+          example: .png
+        fsize:
+          type: integer
+          description: Attachment file size, in bytes.
+          example: 516657
+        md5:
+          type: string
+          description: 24-character packed base64 MD5 hash of the attachment.
+          example: uZUeZeB14FVR+Mc2ScHvVA==
+        w:
+          type: integer
+          description: Attachment width in pixels.
+          example: 530
+        h:
+          type: integer
+          description: Attachment height in pixels.
+          example: 449
+        tn_w:
+          type: integer
+          description: Thumbnail width in pixels.
+          example: 250
+        tn_h:
+          type: integer
+          description: Thumbnail height in pixels.
+          example: 211
+        filedeleted:
+          type: integer
+          description: '`1` if the post had a file and that file has been deleted.'
+          enum: [0, 1]
+          example: 0
+        spoiler:
+          type: integer
+          description: '`1` if the attachment is spoilered.'
+          enum: [0, 1]
+          example: 0
+        custom_spoiler:
+          type: integer
+          description: Custom spoiler ID `1-10` (only on boards with custom spoilers).
+          minimum: 1
+          maximum: 10
+          example: 1
+        replies:
+          type: integer
+          description: Total number of replies in the thread (OP only).
+          example: 2
+        images:
+          type: integer
+          description: Total number of image replies in the thread (OP only).
+          example: 2
+        bumplimit:
+          type: integer
+          description: '`1` once the thread has reached its bump limit (OP only).'
+          enum: [0, 1]
+          example: 0
+        imagelimit:
+          type: integer
+          description: '`1` once the thread has reached its image-reply limit (OP only).'
+          enum: [0, 1]
+          example: 0
+        tag:
+          type: string
+          description: Category of `.swf` upload on `/f/` (OP only, `/f/` only).
+          example: Game
+        semantic_url:
+          type: string
+          description: SEO-friendly URL slug for the thread (OP only).
+          example: welcome-to-po
+        since4pass:
+          type: integer
+          description: Year the poster bought a 4chan Pass (only when the poster opted in).
+          example: 2018
+        unique_ips:
+          type: integer
+          description: Number of unique posters in the thread (OP only, only when the thread is live).
+          example: 1
+        m_img:
+          type: integer
+          description: '`1` if a mobile-optimized variant of the attachment exists.'
+          enum: [0, 1]
+          example: 1
+        archived:
+          type: integer
+          description: '`1` once the thread has been archived (OP only).'
+          enum: [0, 1]
+          example: 1
+        archived_on:
+          type: integer
+          description: UNIX timestamp the thread was archived (OP only).
+          example: 1566530948
+        omitted_posts:
+          type: integer
+          description: Replies omitted from a catalog/index preview (OP only on catalog/index responses).
+          example: 1
+        omitted_images:
+          type: integer
+          description: Image replies omitted from a catalog/index preview (OP only on catalog/index responses).
+          example: 1
+        last_modified:
+          type: integer
+          description: UNIX timestamp the thread was last modified (OP only on catalog/threadlist responses).
+          example: 1566530948
+        last_replies:
+          type: array
+          description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
+          items:
+            $ref: '#/components/schemas/Post'
+    ThreadResponse:
+      type: object
+      description: Top-level response from `/{board}/thread/{thread}.json`.
+      required:
+      - posts
+      properties:
+        posts:
+          type: array
+          description: The OP followed by every reply in the thread, in chronological order.
+          items:
+            $ref: '#/components/schemas/Post'
+    IndexPageThread:
+      type: object
+      description: Wrapper around the posts visible for one thread inside an index-page response.
+      required:
+      - posts
+      properties:
+        posts:
+          type: array
+          description: OP plus preview replies for this thread.
+          items:
+            $ref: '#/components/schemas/Post'
+    IndexPageResponse:
+      type: object
+      description: Top-level response from `/{board}/{page}.json`.
+      required:
+      - threads
+      properties:
+        threads:
+          type: array
+          description: Every thread visible on the requested index page.
+          items:
+            $ref: '#/components/schemas/IndexPageThread'
+    ThreadlistEntry:
+      type: object
+      description: Compact thread summary used in the per-board threadlist.
+      required:
+      - 'no'
+      - last_modified
+      - replies
+      properties:
+        'no':
+          type: integer
+          description: Thread OP ID.
+          example: 570368
+        last_modified:
+          type: integer
+          description: UNIX timestamp the thread was last modified.
+          example: 1546294897
+        replies:
+          type: integer
+          description: Number of replies in the thread.
+          example: 2
+    ThreadlistPage:
+      type: object
+      description: One index page in a threadlist response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Compact thread entries on this page.
+          items:
+            $ref: '#/components/schemas/ThreadlistEntry'
+    ThreadlistResponse:
+      type: array
+      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
+      items:
+        $ref: '#/components/schemas/ThreadlistPage'
+    CatalogPage:
+      type: object
+      description: One index page in a catalog response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this catalog page entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
+          items:
+            $ref: '#/components/schemas/Post'
+    CatalogResponse:
+      type: array
+      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
+      items:
+        $ref: '#/components/schemas/CatalogPage'
+    ArchiveResponse:
+      type: array
+      description: Top-level response from `/{board}/archive.json` — an array of archived OP numbers.
+      items:
+        type: integer
+        description: An archived OP ID.
+        example: 571958

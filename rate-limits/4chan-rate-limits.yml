@@ -1,0 +1,90 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: 4chan
+providerId: 4chan
+created: '2026-05-28'
+modified: '2026-05-28'
+reconciled: true
+tags:
+  - Rate Limiting
+  - Social
+  - Imageboard
+  - Read Only
+description: >-
+  4chan publishes hard client-side rate-limit rules in the API README that all
+  clients MUST observe. The limits are per-client (enforced by IP at the
+  network edge) and apply uniformly regardless of who is calling — there is no
+  per-account scoping because there is no authentication. Two rules dominate:
+  no more than one request per second across all endpoints, and any per-thread
+  polling loop must wait at least 10 seconds (preferably longer) between
+  requests against `/{board}/thread/{thread}.json`. Clients SHOULD also send
+  `If-Modified-Since` so unchanged threads are served as `304 Not Modified` and
+  do not count against an effective fetch budget.
+sources:
+  - https://github.com/4chan/4chan-API#api-rules
+  - https://github.com/4chan/4chan-API
+headers:
+  ifModifiedSince: If-Modified-Since
+  lastModified: Last-Modified
+responseCodes:
+  notModified: 304
+  notFound: 404
+  throttled: 503
+limits:
+  - name: Global request rate (all endpoints)
+    scope: IP
+    metric: requests_per_second
+    limit: 1
+    timeFrame: second
+    notes: >-
+      Hard rule from the 4chan API README: "Do not make more than one request
+      per second." Applies across all endpoints.
+  - name: Per-thread polling interval
+    scope: IP
+    metric: requests_per_minute
+    limit: 6
+    timeFrame: minute
+    notes: >-
+      Rule from the 4chan API README: "Thread updating should be set to a
+      minimum of 10 seconds, preferably higher." 6 req/min is the absolute
+      ceiling for a single thread.json polling loop; 1–2 req/min is preferred.
+  - name: HTTP methods accepted
+    scope: IP
+    metric: varies
+    limit: 'Only GET / HEAD / OPTIONS — POST / PUT / PATCH / DELETE are rejected'
+    notes: >-
+      The API is read-only. Any non-read method returns an error at the edge.
+  - name: CORS allowed origins
+    scope: IP
+    metric: varies
+    limit: 'CORS allowed only from boards.4chan.org and boards.4channel.org'
+    notes: >-
+      Cross-origin requests from any other origin are blocked. Server-side
+      clients are unaffected.
+policies:
+  - name: Use If-Modified-Since
+    description: >-
+      Per the 4chan API rules, clients SHOULD send `If-Modified-Since` on
+      repeated requests. A `304 Not Modified` response indicates the resource
+      has not changed since the supplied timestamp; clients MUST keep their
+      cached copy and avoid re-parsing the body.
+  - name: Match protocol of the calling app
+    description: >-
+      "Make API requests using the same protocol as the app. Only use SSL
+      when a user is accessing your app over HTTPS." This is a published rule
+      in the 4chan API README.
+  - name: Back off on 503
+    description: >-
+      503 responses indicate the edge is shedding load. Exponential back off
+      and respect any `Retry-After` header if present.
+  - name: Use threads.json for change detection
+    description: >-
+      Poll `/{board}/threads.json` (small, cheap) to detect which thread ids
+      have a newer `last_modified` before fetching the full thread document.
+      This is the canonical efficient polling pattern.
+  - name: Anonymous and unauthenticated
+    description: >-
+      There is no API key, token, or account. Rate limits are per-IP and
+      cannot be raised via support; high-volume use cases (research mirrors,
+      archives) must spread requests over time, not parallelize across keys.

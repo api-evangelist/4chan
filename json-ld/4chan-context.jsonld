@@ -1,0 +1,326 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "fc": "https://api.4chan.org/schema/",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "Cooldowns": "fc:Cooldowns",
+    "Board": "fc:Board",
+    "BoardsResponse": "fc:BoardsResponse",
+    "Post": "fc:Post",
+    "ThreadResponse": "fc:ThreadResponse",
+    "IndexPageThread": "fc:IndexPageThread",
+    "IndexPageResponse": "fc:IndexPageResponse",
+    "ThreadlistEntry": "fc:ThreadlistEntry",
+    "ThreadlistPage": "fc:ThreadlistPage",
+    "CatalogPage": "fc:CatalogPage",
+    "archived": {
+      "@id": "fc:archived",
+      "@type": "xsd:integer"
+    },
+    "archivedOn": {
+      "@id": "fc:archived_on",
+      "@type": "xsd:integer"
+    },
+    "board": {
+      "@id": "fc:board",
+      "@type": "xsd:string"
+    },
+    "boardFlag": {
+      "@id": "fc:board_flag",
+      "@type": "xsd:string"
+    },
+    "boardFlags": {
+      "@id": "fc:board_flags",
+      "@type": "@id"
+    },
+    "boards": {
+      "@id": "fc:boards",
+      "@container": "@set",
+      "@type": "@id"
+    },
+    "bumpLimit": {
+      "@id": "fc:bump_limit",
+      "@type": "xsd:integer"
+    },
+    "bumplimit": {
+      "@id": "fc:bumplimit",
+      "@type": "xsd:integer"
+    },
+    "capcode": {
+      "@id": "fc:capcode",
+      "@type": "xsd:string"
+    },
+    "closed": {
+      "@id": "fc:closed",
+      "@type": "xsd:integer"
+    },
+    "codeTags": {
+      "@id": "fc:code_tags",
+      "@type": "xsd:integer"
+    },
+    "com": {
+      "@id": "fc:com",
+      "@type": "xsd:string"
+    },
+    "cooldowns": {
+      "@id": "fc:cooldowns",
+      "@type": "@id"
+    },
+    "country": {
+      "@id": "fc:country",
+      "@type": "xsd:string"
+    },
+    "countryFlags": {
+      "@id": "fc:country_flags",
+      "@type": "xsd:integer"
+    },
+    "countryName": {
+      "@id": "fc:country_name",
+      "@type": "xsd:string"
+    },
+    "customSpoiler": {
+      "@id": "fc:custom_spoiler",
+      "@type": "xsd:integer"
+    },
+    "customSpoilers": {
+      "@id": "fc:custom_spoilers",
+      "@type": "xsd:integer"
+    },
+    "ext": {
+      "@id": "fc:ext",
+      "@type": "xsd:string"
+    },
+    "filedeleted": {
+      "@id": "fc:filedeleted",
+      "@type": "xsd:integer"
+    },
+    "filename": {
+      "@id": "fc:filename",
+      "@type": "xsd:string"
+    },
+    "flagName": {
+      "@id": "fc:flag_name",
+      "@type": "xsd:string"
+    },
+    "forcedAnon": {
+      "@id": "fc:forced_anon",
+      "@type": "xsd:integer"
+    },
+    "fsize": {
+      "@id": "fc:fsize",
+      "@type": "xsd:integer"
+    },
+    "h": {
+      "@id": "fc:h",
+      "@type": "xsd:integer"
+    },
+    "id": {
+      "@id": "fc:id",
+      "@type": "xsd:string"
+    },
+    "imageLimit": {
+      "@id": "fc:image_limit",
+      "@type": "xsd:integer"
+    },
+    "imagelimit": {
+      "@id": "fc:imagelimit",
+      "@type": "xsd:integer"
+    },
+    "images": {
+      "@id": "fc:images",
+      "@type": "xsd:integer"
+    },
+    "isArchived": {
+      "@id": "fc:is_archived",
+      "@type": "xsd:integer"
+    },
+    "lastModified": {
+      "@id": "fc:last_modified",
+      "@type": "xsd:integer"
+    },
+    "lastReplies": {
+      "@id": "fc:last_replies",
+      "@container": "@set",
+      "@type": "@id"
+    },
+    "mImg": {
+      "@id": "fc:m_img",
+      "@type": "xsd:integer"
+    },
+    "mathTags": {
+      "@id": "fc:math_tags",
+      "@type": "xsd:integer"
+    },
+    "maxCommentChars": {
+      "@id": "fc:max_comment_chars",
+      "@type": "xsd:integer"
+    },
+    "maxFilesize": {
+      "@id": "fc:max_filesize",
+      "@type": "xsd:integer"
+    },
+    "maxWebmDuration": {
+      "@id": "fc:max_webm_duration",
+      "@type": "xsd:integer"
+    },
+    "maxWebmFilesize": {
+      "@id": "fc:max_webm_filesize",
+      "@type": "xsd:integer"
+    },
+    "md5": {
+      "@id": "fc:md5",
+      "@type": "xsd:string"
+    },
+    "metaDescription": {
+      "@id": "fc:meta_description",
+      "@type": "xsd:string"
+    },
+    "minImageHeight": {
+      "@id": "fc:min_image_height",
+      "@type": "xsd:integer"
+    },
+    "minImageWidth": {
+      "@id": "fc:min_image_width",
+      "@type": "xsd:integer"
+    },
+    "name": {
+      "@id": "schema:name",
+      "@type": "xsd:string"
+    },
+    "no": {
+      "@id": "fc:no",
+      "@type": "xsd:integer"
+    },
+    "now": {
+      "@id": "fc:now",
+      "@type": "xsd:string"
+    },
+    "oekaki": {
+      "@id": "fc:oekaki",
+      "@type": "xsd:integer"
+    },
+    "omittedImages": {
+      "@id": "fc:omitted_images",
+      "@type": "xsd:integer"
+    },
+    "omittedPosts": {
+      "@id": "fc:omitted_posts",
+      "@type": "xsd:integer"
+    },
+    "page": {
+      "@id": "fc:page",
+      "@type": "xsd:integer"
+    },
+    "pages": {
+      "@id": "fc:pages",
+      "@type": "xsd:integer"
+    },
+    "perPage": {
+      "@id": "fc:per_page",
+      "@type": "xsd:integer"
+    },
+    "posts": {
+      "@id": "fc:posts",
+      "@container": "@set",
+      "@type": "@id"
+    },
+    "replies": {
+      "@id": "fc:replies",
+      "@type": "xsd:integer"
+    },
+    "requireSubject": {
+      "@id": "fc:require_subject",
+      "@type": "xsd:integer"
+    },
+    "resto": {
+      "@id": "fc:resto",
+      "@type": "xsd:integer"
+    },
+    "semanticUrl": {
+      "@id": "fc:semantic_url",
+      "@type": "xsd:string"
+    },
+    "since4pass": {
+      "@id": "fc:since4pass",
+      "@type": "xsd:integer"
+    },
+    "sjisTags": {
+      "@id": "fc:sjis_tags",
+      "@type": "xsd:integer"
+    },
+    "spoiler": {
+      "@id": "fc:spoiler",
+      "@type": "xsd:integer"
+    },
+    "spoilers": {
+      "@id": "fc:spoilers",
+      "@type": "xsd:integer"
+    },
+    "sticky": {
+      "@id": "fc:sticky",
+      "@type": "xsd:integer"
+    },
+    "sub": {
+      "@id": "fc:sub",
+      "@type": "xsd:string"
+    },
+    "tag": {
+      "@id": "fc:tag",
+      "@type": "xsd:string"
+    },
+    "textOnly": {
+      "@id": "fc:text_only",
+      "@type": "xsd:integer"
+    },
+    "threads": {
+      "@id": "fc:threads",
+      "@type": "xsd:integer"
+    },
+    "tim": {
+      "@id": "fc:tim",
+      "@type": "xsd:integer"
+    },
+    "time": {
+      "@id": "fc:time",
+      "@type": "xsd:integer"
+    },
+    "title": {
+      "@id": "fc:title",
+      "@type": "xsd:string"
+    },
+    "tnH": {
+      "@id": "fc:tn_h",
+      "@type": "xsd:integer"
+    },
+    "tnW": {
+      "@id": "fc:tn_w",
+      "@type": "xsd:integer"
+    },
+    "trip": {
+      "@id": "fc:trip",
+      "@type": "xsd:string"
+    },
+    "uniqueIps": {
+      "@id": "fc:unique_ips",
+      "@type": "xsd:integer"
+    },
+    "userIds": {
+      "@id": "fc:user_ids",
+      "@type": "xsd:integer"
+    },
+    "w": {
+      "@id": "fc:w",
+      "@type": "xsd:integer"
+    },
+    "webmAudio": {
+      "@id": "fc:webm_audio",
+      "@type": "xsd:integer"
+    },
+    "wsBoard": {
+      "@id": "fc:ws_board",
+      "@type": "xsd:integer"
+    }
+  }
+}
