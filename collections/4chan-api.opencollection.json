@@ -1,0 +1,176 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Boards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan List All Boards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/boards.json"
+          },
+          "docs": "Returns the comprehensive list of all 4chan and 4channel boards and their major settings (page count, per-page thread count, bump/image limits, cooldowns, feature flags, etc.). This is the canonical bootstrap call for any client — every other endpoint requires a board directory name from this document."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Threadlist",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Threadlist",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/threads.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              }
+            ]
+          },
+          "docs": "Returns a compact list of every live thread on the given board grouped by index page. Each thread entry contains only the OP number (`no`), the last-modified UNIX timestamp, and the reply count. Use this endpoint to detect new and updated threads cheaply; fetch the full thread or catalog only when `last_modified` changes."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Catalog",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/catalog.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              }
+            ]
+          },
+          "docs": "Returns the full catalog snapshot for the given board: every OP with its attributes and a short list of preview replies, grouped by index page. This is the largest per-board document and mirrors the public catalog page at `boards.4channel.org/{board}/catalog`."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Archive",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Archive",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/archive.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              }
+            ]
+          },
+          "docs": "Returns the list of archived (closed, read-only) thread OP numbers for the given board. Archived threads remain viewable until 4chan automatically deletes them. Not every board has archives enabled — boards without an archive return 404."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Indexes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Index Page",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/:page.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              },
+              {
+                "name": "page",
+                "value": "3",
+                "type": "path",
+                "description": "Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15)."
+              }
+            ]
+          },
+          "docs": "Returns a single index page for the given board. Each index page contains an array of threads, and each thread contains its OP plus a small number of preview replies. The maximum page number for a board comes from the `pages` field on the matching entry in `/boards.json`."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Threads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/thread/:thread.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              },
+              {
+                "name": "thread",
+                "value": "570368",
+                "type": "path",
+                "description": "The OP number of the thread to retrieve."
+              }
+            ]
+          },
+          "docs": "Returns the full document for a single thread on the given board: the OP post object followed by every reply. To poll a thread for new replies, send `If-Modified-Since` on subsequent requests and treat `304` as \"no change\"; the minimum polling interval per the 4chan API rules is 10 seconds, with longer intervals preferred."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
