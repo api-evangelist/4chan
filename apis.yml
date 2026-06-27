@@ -41,7 +41,7 @@ apis:
         url: https://github.com/4chan/4chan-API
       - type: OpenAPI
         url: openapi/4chan-api.yml
-      - type: SignUp
+      - type: Signup
         url: https://github.com/4chan/4chan-API#api-rules
       - type: Support
         url: mailto:api@4chan.org
@@ -62,22 +62,22 @@ common:
   - type: Tools
     title: MCP Server (community, unofficial)
     url: https://github.com/sh0n0/chan-mcp-server
-  - type: SDK
+  - type: SDKs
     title: Python Wrapper (BASC-py4chan, community)
     url: https://github.com/bibanon/BASC-py4chan
-  - type: SDK
+  - type: SDKs
     title: Python Wrapper (py-4chan, community)
     url: https://github.com/e000/py-4chan
-  - type: SDK
+  - type: SDKs
     title: Node.js Client (4chanjs, community)
     url: https://github.com/yocontra/4chanjs
-  - type: SDK
+  - type: SDKs
     title: Go Client (go-4chan-api, community)
     url: https://github.com/moshee/go-4chan-api
-  - type: SDK
+  - type: SDKs
     title: Rust Client (rchan, community)
     url: https://github.com/insomnimus/rchan
-  - type: SDK
+  - type: SDKs
     title: Racket Client (yotsubAPI, community)
     url: https://github.com/g-gundam/yotsubAPI
   - type: Tools
