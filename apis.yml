@@ -48,6 +48,10 @@ apis:
       - type: TermsOfService
         url: https://github.com/4chan/4chan-API#api-terms-of-service
 common:
+  - type: VulnerabilityDisclosure
+    url: security/4chan-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/4chan-domain-security.yml
   - type: Website
     url: https://www.4chan.org
   - type: Documentation

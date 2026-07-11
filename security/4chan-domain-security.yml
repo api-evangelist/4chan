@@ -1,0 +1,27 @@
+generated: '2026-07-11'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.4chan.org
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  5 13:22:49 2026 GMT
+  hsts: null
+- host: a.4cdn.org
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct  5 03:56:17 2026 GMT
+  hsts: null
+domains:
+- domain: 4chan.org
+  dnssec: true
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: quarantine
+- domain: 4cdn.org
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject
