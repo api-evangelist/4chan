@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: 4chan Read-Only JSON Archive Threadlist API
+  description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
+
+    There is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.
+
+    Clients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.'
+  version: '2026-05-28'
+  termsOfService: https://github.com/4chan/4chan-API#api-terms-of-service
+  contact:
+    name: 4chan API
+    email: api@4chan.org
+    url: https://github.com/4chan/4chan-API
+  license:
+    name: 4chan API Terms of Service
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+  x-generated-from: documentation
+  x-source-url: https://github.com/4chan/4chan-API
+  x-last-validated: '2026-05-28'
+servers:
+- url: https://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTPS).
+- url: http://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTP, legacy clients only).
+tags:
+- name: Threadlist
+  description: Per-board summary list of every live thread (id, last-modified, reply count) grouped by index page.
+paths:
+  /{board}/threads.json:
+    get:
+      operationId: getBoardThreadlist
+      summary: 4chan Get Board Threadlist
+      description: Returns a compact list of every live thread on the given board grouped by index page. Each thread entry contains only the OP number (`no`), the last-modified UNIX timestamp, and the reply count. Use this endpoint to detect new and updated threads cheaply; fetch the full thread or catalog only when `last_modified` changes.
+      tags:
+      - Threadlist
+      parameters:
+      - $ref: '#/components/parameters/BoardPath'
+      responses:
+        '200':
+          description: Successful response. Returns the threadlist grouped by index page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThreadlistResponse'
+              examples:
+                GetBoardThreadlist200Example:
+                  summary: Default getBoardThreadlist 200 response
+                  x-microcks-default: true
+                  value:
+                  - page: 1
+                    threads:
+                    - false: 570368
+                      last_modified: 1546294897
+                      replies: 2
+                    - false: 574933
+                      last_modified: 1566530948
+                      replies: 228
+                  - page: 2
+                    threads:
+                    - false: 568362
+                      last_modified: 1566367619
+                      replies: 55
+        '304':
+          description: Not Modified.
+        '404':
+          description: Board not found.
+        '503':
+          description: Service Unavailable.
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po
+  schemas:
+    ThreadlistResponse:
+      type: array
+      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
+      items:
+        $ref: '#/components/schemas/ThreadlistPage'
+    ThreadlistPage:
+      type: object
+      description: One index page in a threadlist response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Compact thread entries on this page.
+          items:
+            $ref: '#/components/schemas/ThreadlistEntry'
+    ThreadlistEntry:
+      type: object
+      description: Compact thread summary used in the per-board threadlist.
+      required:
+      - 'no'
+      - last_modified
+      - replies
+      properties:
+        'no':
+          type: integer
+          description: Thread OP ID.
+          example: 570368
+        last_modified:
+          type: integer
+          description: UNIX timestamp the thread was last modified.
+          example: 1546294897
+        replies:
+          type: integer
+          description: Number of replies in the thread.
+          example: 2

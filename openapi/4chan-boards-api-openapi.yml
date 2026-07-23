@@ -1,0 +1,298 @@
+openapi: 3.0.3
+info:
+  title: 4chan Read-Only JSON Archive Boards API
+  description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
+
+    There is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.
+
+    Clients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.'
+  version: '2026-05-28'
+  termsOfService: https://github.com/4chan/4chan-API#api-terms-of-service
+  contact:
+    name: 4chan API
+    email: api@4chan.org
+    url: https://github.com/4chan/4chan-API
+  license:
+    name: 4chan API Terms of Service
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+  x-generated-from: documentation
+  x-source-url: https://github.com/4chan/4chan-API
+  x-last-validated: '2026-05-28'
+servers:
+- url: https://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTPS).
+- url: http://a.4cdn.org
+  description: Production 4chan read-only JSON API (HTTP, legacy clients only).
+tags:
+- name: Boards
+  description: List of all boards on 4chan and 4channel and their per-board settings.
+paths:
+  /boards.json:
+    get:
+      operationId: getBoards
+      summary: 4chan List All Boards
+      description: Returns the comprehensive list of all 4chan and 4channel boards and their major settings (page count, per-page thread count, bump/image limits, cooldowns, feature flags, etc.). This is the canonical bootstrap call for any client — every other endpoint requires a board directory name from this document.
+      tags:
+      - Boards
+      responses:
+        '200':
+          description: Successful response. Returns the full boards list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoardsResponse'
+              examples:
+                GetBoards200Example:
+                  summary: Default getBoards 200 response
+                  x-microcks-default: true
+                  value:
+                    boards:
+                    - board: a
+                      title: Anime & Manga
+                      ws_board: 1
+                      per_page: 15
+                      pages: 10
+                      max_filesize: 4194304
+                      max_webm_filesize: 3145728
+                      max_comment_chars: 2000
+                      max_webm_duration: 120
+                      bump_limit: 500
+                      image_limit: 300
+                      cooldowns:
+                        threads: 600
+                        replies: 60
+                        images: 60
+                      meta_description: '"/a/ - Anime & Manga" is 4chan''s imageboard dedicated to the discussion of Japanese animation and manga.'
+                      spoilers: 1
+                      custom_spoilers: 1
+                      is_archived: 1
+                    - board: po
+                      title: Papercraft & Origami
+                      ws_board: 1
+                      per_page: 15
+                      pages: 10
+                      max_filesize: 4194304
+                      max_webm_filesize: 3145728
+                      max_comment_chars: 2000
+                      max_webm_duration: 120
+                      bump_limit: 500
+                      image_limit: 300
+                      cooldowns:
+                        threads: 600
+                        replies: 60
+                        images: 60
+                      meta_description: '"/po/ - Papercraft & Origami" is 4chan''s imageboard for paper engineering.'
+                      is_archived: 1
+        '304':
+          description: Not Modified. Returned when an `If-Modified-Since` header matched.
+        '404':
+          description: Not Found.
+        '503':
+          description: Service Unavailable (rate limited or back-pressure).
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  schemas:
+    Cooldowns:
+      type: object
+      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
+      properties:
+        threads:
+          type: integer
+          description: Minimum seconds between consecutive thread creations from the same poster.
+          example: 600
+        replies:
+          type: integer
+          description: Minimum seconds between consecutive replies from the same poster.
+          example: 60
+        images:
+          type: integer
+          description: Minimum seconds between consecutive image posts from the same poster.
+          example: 60
+    Board:
+      type: object
+      description: A single board on 4chan or 4channel and its configured settings.
+      required:
+      - board
+      - title
+      - ws_board
+      - per_page
+      - pages
+      - max_filesize
+      - max_webm_filesize
+      - max_comment_chars
+      - max_webm_duration
+      - bump_limit
+      - image_limit
+      - cooldowns
+      - meta_description
+      properties:
+        board:
+          type: string
+          description: Board directory short name (used as the path segment for all per-board endpoints).
+          example: a
+        title:
+          type: string
+          description: Human-readable board title displayed at the top of the board.
+          example: Anime & Manga
+        ws_board:
+          type: integer
+          description: '`1` if the board is worksafe, `0` otherwise.'
+          enum:
+          - 0
+          - 1
+          example: 1
+        per_page:
+          type: integer
+          description: Number of threads displayed on a single index page.
+          example: 15
+        pages:
+          type: integer
+          description: Total number of index pages on the board.
+          example: 10
+        max_filesize:
+          type: integer
+          description: Maximum file size allowed for non-`.webm` attachments, in bytes.
+          example: 4194304
+        max_webm_filesize:
+          type: integer
+          description: Maximum file size allowed for `.webm` attachments, in bytes.
+          example: 3145728
+        max_comment_chars:
+          type: integer
+          description: Maximum number of characters allowed in a single post comment.
+          example: 2000
+        max_webm_duration:
+          type: integer
+          description: Maximum allowed duration of a `.webm` attachment, in seconds.
+          example: 120
+        bump_limit:
+          type: integer
+          description: Maximum number of replies before a thread stops bumping to the top.
+          example: 500
+        image_limit:
+          type: integer
+          description: Maximum number of image replies before further image replies are discarded.
+          example: 300
+        cooldowns:
+          $ref: '#/components/schemas/Cooldowns'
+        meta_description:
+          type: string
+          description: SEO `<meta>` description content for the board's catalog page.
+          example: '"/a/ - Anime & Manga" is 4chan''s imageboard dedicated to the discussion of Japanese animation and manga.'
+        spoilers:
+          type: integer
+          description: '`1` if spoilered images are enabled on this board.'
+          enum:
+          - 0
+          - 1
+          example: 1
+        custom_spoilers:
+          type: integer
+          description: Number of custom spoiler image variants the board provides.
+          example: 1
+        is_archived:
+          type: integer
+          description: '`1` if the board has its archive enabled.'
+          enum:
+          - 0
+          - 1
+          example: 1
+        board_flags:
+          type: object
+          description: Map of board-specific flag codes to human-readable flag names.
+          additionalProperties:
+            type: string
+          example:
+            AB: Flag Name AB
+            XY: Flag Name XY
+        country_flags:
+          type: integer
+          description: '`1` if poster country flags are enabled on this board.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        user_ids:
+          type: integer
+          description: '`1` if per-thread poster ID tags are enabled.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        oekaki:
+          type: integer
+          description: '`1` if users can submit drawings via the in-browser Oekaki app.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        sjis_tags:
+          type: integer
+          description: '`1` if the `[sjis]` Shift-JIS drawing tag is supported.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        code_tags:
+          type: integer
+          description: '`1` if `[code]` syntax-highlighted blocks are supported.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        math_tags:
+          type: integer
+          description: '`1` if `[math]` / `[eqn]` TeX rendering is supported.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        text_only:
+          type: integer
+          description: '`1` if image posting is disabled on the board.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        forced_anon:
+          type: integer
+          description: '`1` if the name field is disabled on the board.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        webm_audio:
+          type: integer
+          description: '`1` if `.webm` files with audio tracks are allowed.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        require_subject:
+          type: integer
+          description: '`1` if OPs are required to include a subject.'
+          enum:
+          - 0
+          - 1
+          example: 0
+        min_image_width:
+          type: integer
+          description: Minimum allowed width of uploaded images, in pixels.
+          example: 100
+        min_image_height:
+          type: integer
+          description: Minimum allowed height of uploaded images, in pixels.
+          example: 100
+    BoardsResponse:
+      type: object
+      description: Top-level response from `/boards.json`.
+      required:
+      - boards
+      properties:
+        boards:
+          type: array
+          description: Every board on 4chan and 4channel.
+          items:
+            $ref: '#/components/schemas/Board'
