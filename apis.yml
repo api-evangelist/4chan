@@ -6,6 +6,18 @@ description: >-
   archive data consumed by the public site via static JSON files at a.4cdn.org. The API supports GET/HEAD/OPTIONS only —
   there is no posting, authentication, or write surface.
 url: https://github.com/4chan/4chan-API
+accessModel:
+  pricing: freemium
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Freemium
+  confidence: medium
+  source:
+  - plans
+  generated: '2026-07-22'
+  method: derived
 image: https://s.4cdn.org/image/fp/logo-transparent.png
 specificationVersion: '0.20'
 created: '2026-05-28'
@@ -24,29 +36,118 @@ tags:
   - Public APIs
   - Community
 apis:
-  - name: 4chan Read-Only JSON API
-    description: >-
-      Read-only HTTP JSON API serving boards.json, threads.json, catalog.json, archive.json, board index pages, and
-      individual thread documents from a.4cdn.org. Mirrors the data visible at boards.4chan.org / boards.4channel.org.
-      No authentication, no write operations. CORS allowed only from boards.4chan.org and boards.4channel.org origins.
-    humanURL: https://github.com/4chan/4chan-API
-    baseURL: https://a.4cdn.org
-    image: https://s.4cdn.org/image/fp/logo-transparent.png
-    tags:
-      - Social
-      - Imageboard
-      - Read Only
-    properties:
-      - type: Documentation
-        url: https://github.com/4chan/4chan-API
-      - type: OpenAPI
-        url: openapi/4chan-api.yml
-      - type: Signup
-        url: https://github.com/4chan/4chan-API#api-rules
-      - type: Support
-        url: mailto:api@4chan.org
-      - type: TermsOfService
-        url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-archive-api
+  name: 4chan Archive API
+  description: Per-board list of OP numbers for closed, archived threads.
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Archive
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-archive-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-boards-api
+  name: 4chan Boards API
+  description: List of all boards on 4chan and 4channel and their per-board settings.
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Boards
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-boards-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-catalog-api
+  name: 4chan Catalog API
+  description: >-
+    Per-board catalog snapshot containing every OP and its preview replies, grouped by index page.
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-catalog-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-indexes-api
+  name: 4chan Indexes API
+  description: >-
+    Per-board, per-page index document of threads (each with a posts array including the OP and a small
+    number of preview replies).
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Indexes
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-indexes-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-threadlist-api
+  name: 4chan Threadlist API
+  description: >-
+    Per-board summary list of every live thread (id, last-modified, reply count) grouped by index page.
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Threadlist
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-threadlist-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
+- aid: 4chan:4chan-threads-api
+  name: 4chan Threads API
+  description: Single-thread document containing the OP and every reply.
+  humanURL: https://github.com/4chan/4chan-API
+  baseURL: https://a.4cdn.org
+  tags:
+  - Threads
+  properties:
+  - type: OpenAPI
+    url: openapi/4chan-threads-api-openapi.yml
+  - type: Documentation
+    url: https://github.com/4chan/4chan-API
+  - type: Signup
+    url: https://github.com/4chan/4chan-API#api-rules
+  - type: Support
+    url: mailto:api@4chan.org
+  - type: TermsOfService
+    url: https://github.com/4chan/4chan-API#api-terms-of-service
 common:
   - type: AgenticAccess
     url: agentic-access/4chan-agentic-access.yml
