@@ -1,0 +1,24 @@
+{
+  "provider": "4chan",
+  "sources": [
+    "4chan-archive-api-openapi.yml",
+    "4chan-boards-api-openapi.yml",
+    "4chan-catalog-api-openapi.yml",
+    "4chan-indexes-api-openapi.yml",
+    "4chan-threadlist-api-openapi.yml",
+    "4chan-threads-api-openapi.yml"
+  ],
+  "outputs": [
+    "4chan-archive-api-openapi.yml",
+    "4chan-boards-api-openapi.yml",
+    "4chan-catalog-api-openapi.yml",
+    "4chan-indexes-api-openapi.yml",
+    "4chan-threadlist-api-openapi.yml",
+    "4chan-threads-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
