@@ -1,0 +1,29 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON Archive Boards API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Boards",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan List All Boards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/boards.json"
+          },
+          "docs": "Returns the comprehensive list of all 4chan and 4channel boards and their major settings (page count, per-page thread count, bump/image limits, cooldowns, feature flags, etc.). This is the canonical bootstrap call for any client — every other endpoint requires a board directory name from this document."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

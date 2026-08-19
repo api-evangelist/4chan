@@ -1,0 +1,249 @@
+{
+  "item": [
+    {
+      "id": "82e6dada-6585-4ae7-ae82-7c6b2d521d84",
+      "name": "Threads",
+      "description": {
+        "content": "Single-thread document containing the OP and every reply.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "1c0e95e3-5d88-4399-8d13-5fe51a03adcd",
+          "name": "4chan Get Thread",
+          "request": {
+            "name": "4chan Get Thread",
+            "description": {
+              "content": "Returns the full document for a single thread on the given board: the OP post object followed by every reply. To poll a thread for new replies, send `If-Modified-Since` on subsequent requests and treat `304` as \"no change\"; the minimum polling interval per the 4chan API rules is 10 seconds, with longer intervals preferred.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":board",
+                "thread",
+                "{{thread}}.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "board",
+                  "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "17f78946-362f-4add-9191-193494b99bb9",
+              "name": "Successful response. Returns the thread's posts array.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "thread",
+                    "{{thread}}.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"posts\": [\n    {\n      \"false\": 570368,\n      \"sticky\": 1,\n      \"closed\": 1,\n      \"now\": \"12/31/18(Mon)17:05:48\",\n      \"name\": \"Anonymous\",\n      \"sub\": \"Welcome to /po/!\",\n      \"com\": \"Welcome to /po/! We specialize in origami and papercraft.\",\n      \"filename\": \"yotsuba_folding\",\n      \"ext\": \".png\",\n      \"w\": 530,\n      \"h\": 449,\n      \"tn_w\": 250,\n      \"tn_h\": 211,\n      \"tim\": 1546293948883,\n      \"time\": 1546293948,\n      \"md5\": \"uZUeZeB14FVR+Mc2ScHvVA==\",\n      \"fsize\": 516657,\n      \"resto\": 0,\n      \"capcode\": \"mod\",\n      \"semantic_url\": \"welcome-to-po\",\n      \"replies\": 2,\n      \"images\": 2,\n      \"unique_ips\": 1\n    },\n    {\n      \"false\": 570370,\n      \"now\": \"12/31/18(Mon)17:14:56\",\n      \"name\": \"Anonymous\",\n      \"com\": \"FAQs about papercraft.\",\n      \"filename\": \"papercraft faq\",\n      \"ext\": \".png\",\n      \"w\": 318,\n      \"h\": 704,\n      \"tn_w\": 56,\n      \"tn_h\": 125,\n      \"tim\": 1546294496751,\n      \"time\": 1546294496,\n      \"md5\": \"0EqXBb4gGIyzQiaApMdFAA==\",\n      \"fsize\": 285358,\n      \"resto\": 570368,\n      \"capcode\": \"mod\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "036d0403-e656-450b-b76f-7851a46b3727",
+              "name": "Not Modified.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "thread",
+                    "{{thread}}.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Modified",
+              "code": 304,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f566a0d4-56fb-4bda-8c48-22affe2c8707",
+              "name": "Board not found or thread does not exist.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "thread",
+                    "{{thread}}.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "e8f004c7-bc8e-4fda-8cb0-74c01848be3f",
+              "name": "Service Unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "thread",
+                    "{{thread}}.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://a.4cdn.org",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) The OP number of the thread to retrieve.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<integer>",
+      "key": "thread"
+    }
+  ],
+  "info": {
+    "_postman_id": "f61d8224-47d5-4463-bb7a-543d25e74350",
+    "name": "4chan Read-Only JSON Archive Threads API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.\nThere is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.\nClients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.\n\nContact Support:\n Name: 4chan API\n Email: api@4chan.org",
+      "type": "text/plain"
+    }
+  }
+}

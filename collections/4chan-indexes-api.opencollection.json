@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON Archive Indexes API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Indexes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Index Page",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/:page.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              },
+              {
+                "name": "page",
+                "value": "3",
+                "type": "path",
+                "description": "Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15)."
+              }
+            ]
+          },
+          "docs": "Returns a single index page for the given board. Each index page contains an array of threads, and each thread contains its OP plus a small number of preview replies. The maximum page number for a board comes from the `pages` field on the matching entry in `/boards.json`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

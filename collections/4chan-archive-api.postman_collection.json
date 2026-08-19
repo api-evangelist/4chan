@@ -1,0 +1,234 @@
+{
+  "item": [
+    {
+      "id": "615df33c-9260-488d-887c-b185907f420c",
+      "name": "Archive",
+      "description": {
+        "content": "Per-board list of OP numbers for closed, archived threads.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6d880262-b64a-4da4-a188-3742892752b3",
+          "name": "4chan Get Board Archive",
+          "request": {
+            "name": "4chan Get Board Archive",
+            "description": {
+              "content": "Returns the list of archived (closed, read-only) thread OP numbers for the given board. Archived threads remain viewable until 4chan automatically deletes them. Not every board has archives enabled — boards without an archive return 404.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":board",
+                "archive.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "board",
+                  "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "618cdf00-32d1-491c-b7ce-caa806fd00ac",
+              "name": "Successful response. Returns an array of archived OP numbers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "archive.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  571958,\n  572866,\n  574195,\n  574342,\n  574378,\n  574398,\n  574417,\n  574426,\n  574435,\n  574453,\n  574486,\n  574510,\n  574586,\n  574588\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f5f75f47-050a-4853-9287-1781553112bb",
+              "name": "Not Modified.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "archive.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Modified",
+              "code": 304,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "af6595ab-d354-45c7-ae17-d6e5db57f4dd",
+              "name": "Board not found or archive not enabled for this board.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "archive.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "b3ed3009-7acc-4f8e-ac3c-4fb562c1201d",
+              "name": "Service Unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "archive.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://a.4cdn.org",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "6eb0a07d-5397-4f0c-b503-82ea5555b6cf",
+    "name": "4chan Read-Only JSON Archive API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.\nThere is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.\nClients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.\n\nContact Support:\n Name: 4chan API\n Email: api@4chan.org",
+      "type": "text/plain"
+    }
+  }
+}

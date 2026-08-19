@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON Archive Threadlist API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Threadlist",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Threadlist",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/threads.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              }
+            ]
+          },
+          "docs": "Returns a compact list of every live thread on the given board grouped by index page. Each thread entry contains only the OP number (`no`), the last-modified UNIX timestamp, and the reply count. Use this endpoint to detect new and updated threads cheaply; fetch the full thread or catalog only when `last_modified` changes."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

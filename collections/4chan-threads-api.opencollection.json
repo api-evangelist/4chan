@@ -1,0 +1,43 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON Archive Threads API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Threads",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Thread",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/thread/:thread.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              },
+              {
+                "name": "thread",
+                "value": "570368",
+                "type": "path",
+                "description": "The OP number of the thread to retrieve."
+              }
+            ]
+          },
+          "docs": "Returns the full document for a single thread on the given board: the OP post object followed by every reply. To poll a thread for new replies, send `If-Modified-Since` on subsequent requests and treat `304` as \"no change\"; the minimum polling interval per the 4chan API rules is 10 seconds, with longer intervals preferred."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

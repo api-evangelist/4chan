@@ -1,0 +1,234 @@
+{
+  "item": [
+    {
+      "id": "0a1c43b3-b312-430d-9a4a-1b23845e2392",
+      "name": "Catalog",
+      "description": {
+        "content": "Per-board catalog snapshot containing every OP and its preview replies, grouped by index page.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b98e155a-5b02-474f-a20e-1ef10ef0ddd2",
+          "name": "4chan Get Board Catalog",
+          "request": {
+            "name": "4chan Get Board Catalog",
+            "description": {
+              "content": "Returns the full catalog snapshot for the given board: every OP with its attributes and a short list of preview replies, grouped by index page. This is the largest per-board document and mirrors the public catalog page at `boards.4channel.org/{board}/catalog`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                ":board",
+                "catalog.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "board",
+                  "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0927a73e-f6f6-46e9-b285-a93c1d815397",
+              "name": "Successful response. Returns the catalog as an array of pages.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "catalog.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"page\": 1,\n    \"threads\": [\n      {\n        \"false\": 570368,\n        \"sticky\": 1,\n        \"closed\": 1,\n        \"now\": \"12/31/18(Mon)17:05:48\",\n        \"name\": \"Anonymous\",\n        \"sub\": \"Welcome to /po/!\",\n        \"com\": \"Welcome to /po/! We specialize in origami, papercraft, and everything that's relevant to paper engineering.\",\n        \"filename\": \"yotsuba_folding\",\n        \"ext\": \".png\",\n        \"w\": 530,\n        \"h\": 449,\n        \"tn_w\": 250,\n        \"tn_h\": 211,\n        \"tim\": 1546293948883,\n        \"time\": 1546293948,\n        \"md5\": \"uZUeZeB14FVR+Mc2ScHvVA==\",\n        \"fsize\": 516657,\n        \"resto\": 0,\n        \"capcode\": \"mod\",\n        \"semantic_url\": \"welcome-to-po\",\n        \"replies\": 2,\n        \"images\": 2,\n        \"omitted_posts\": 0,\n        \"omitted_images\": 0,\n        \"last_replies\": [\n          {\n            \"false\": 570371,\n            \"now\": \"12/31/18(Mon)17:21:29\",\n            \"name\": \"Anonymous\",\n            \"com\": \"FAQ reply.\",\n            \"time\": 1546294889,\n            \"resto\": 570368\n          }\n        ],\n        \"last_modified\": 1546294897\n      }\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9361b25-f415-4c3f-912a-24dff78d4e30",
+              "name": "Not Modified.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "catalog.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Modified",
+              "code": 304,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7dfc744b-b180-4171-b0ae-3505f1775ae5",
+              "name": "Board not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "catalog.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "9ff574cd-251a-4b71-a462-af1f21305e2c",
+              "name": "Service Unavailable.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    ":board",
+                    "catalog.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "board",
+                      "description": "(Required) Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+                    }
+                  ]
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://a.4cdn.org",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "dd6f7839-6fd6-4474-bde5-e42e830430a6",
+    "name": "4chan Read-Only JSON Archive Catalog API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.\nThere is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.\nClients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.\n\nContact Support:\n Name: 4chan API\n Email: api@4chan.org",
+      "type": "text/plain"
+    }
+  }
+}

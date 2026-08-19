@@ -1,0 +1,189 @@
+{
+  "item": [
+    {
+      "id": "7be74011-bae3-460f-934c-cbc44484d938",
+      "name": "Boards",
+      "description": {
+        "content": "List of all boards on 4chan and 4channel and their per-board settings.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "4c5d45ea-3788-4627-b3b3-52a8ef15befc",
+          "name": "4chan List All Boards",
+          "request": {
+            "name": "4chan List All Boards",
+            "description": {
+              "content": "Returns the comprehensive list of all 4chan and 4channel boards and their major settings (page count, per-page thread count, bump/image limits, cooldowns, feature flags, etc.). This is the canonical bootstrap call for any client — every other endpoint requires a board directory name from this document.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "boards.json"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "72373849-71e1-4218-a5ef-a2c398171f11",
+              "name": "Successful response. Returns the full boards list.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "boards.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"boards\": [\n    {\n      \"board\": \"a\",\n      \"title\": \"Anime & Manga\",\n      \"ws_board\": 1,\n      \"per_page\": 15,\n      \"pages\": 10,\n      \"max_filesize\": 4194304,\n      \"max_webm_filesize\": 3145728,\n      \"max_comment_chars\": 2000,\n      \"max_webm_duration\": 120,\n      \"bump_limit\": 500,\n      \"image_limit\": 300,\n      \"cooldowns\": {\n        \"threads\": 600,\n        \"replies\": 60,\n        \"images\": 60\n      },\n      \"meta_description\": \"\\\"/a/ - Anime & Manga\\\" is 4chan's imageboard dedicated to the discussion of Japanese animation and manga.\",\n      \"spoilers\": 1,\n      \"custom_spoilers\": 1,\n      \"is_archived\": 1\n    },\n    {\n      \"board\": \"po\",\n      \"title\": \"Papercraft & Origami\",\n      \"ws_board\": 1,\n      \"per_page\": 15,\n      \"pages\": 10,\n      \"max_filesize\": 4194304,\n      \"max_webm_filesize\": 3145728,\n      \"max_comment_chars\": 2000,\n      \"max_webm_duration\": 120,\n      \"bump_limit\": 500,\n      \"image_limit\": 300,\n      \"cooldowns\": {\n        \"threads\": 600,\n        \"replies\": 60,\n        \"images\": 60\n      },\n      \"meta_description\": \"\\\"/po/ - Papercraft & Origami\\\" is 4chan's imageboard for paper engineering.\",\n      \"is_archived\": 1\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "093b0289-15ee-48ff-bf0f-405707d4db2a",
+              "name": "Not Modified. Returned when an `If-Modified-Since` header matched.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "boards.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Modified",
+              "code": 304,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "94bfc7c4-ba48-442f-86b9-800459a3777d",
+              "name": "Not Found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "boards.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "4cbad958-c103-4874-a73d-2bbb869c1714",
+              "name": "Service Unavailable (rate limited or back-pressure).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "boards.json"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://a.4cdn.org",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "3341f7a3-6444-486f-a487-ac10680d8e3d",
+    "name": "4chan Read-Only JSON Archive Boards API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.\nThere is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.\nClients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.\n\nContact Support:\n Name: 4chan API\n Email: api@4chan.org",
+      "type": "text/plain"
+    }
+  }
+}

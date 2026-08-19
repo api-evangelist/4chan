@@ -1,0 +1,37 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "4chan Read-Only JSON Archive Catalog API",
+    "version": "2026-05-28"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Catalog",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "4chan Get Board Catalog",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://a.4cdn.org/:board/catalog.json",
+            "params": [
+              {
+                "name": "board",
+                "value": "po",
+                "type": "path",
+                "description": "Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`."
+              }
+            ]
+          },
+          "docs": "Returns the full catalog snapshot for the given board: every OP with its attributes and a short list of preview replies, grouped by index page. This is the largest per-board document and mirrors the public catalog page at `boards.4channel.org/{board}/catalog`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
