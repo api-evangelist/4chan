@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: 4chan Read-Only JSON Archive Threadlist API
   description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
@@ -71,19 +71,6 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  parameters:
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
   schemas:
     ThreadlistResponse:
       type: array
@@ -126,3 +113,16 @@ components:
           type: integer
           description: Number of replies in the thread.
           example: 2
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po

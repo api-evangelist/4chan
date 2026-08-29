@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: 4chan Read-Only JSON Archive Catalog API
   description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
@@ -316,11 +316,6 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-    CatalogResponse:
-      type: array
-      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
-      items:
-        $ref: '#/components/schemas/CatalogPage'
     CatalogPage:
       type: object
       description: One index page in a catalog response.
@@ -337,6 +332,11 @@ components:
           description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
           items:
             $ref: '#/components/schemas/Post'
+    CatalogResponse:
+      type: array
+      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
+      items:
+        $ref: '#/components/schemas/CatalogPage'
   parameters:
     BoardPath:
       name: board

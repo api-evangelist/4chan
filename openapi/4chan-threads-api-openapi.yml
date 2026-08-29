@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: 4chan Read-Only JSON Archive Threads API
   description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
@@ -335,6 +335,16 @@ components:
           items:
             $ref: '#/components/schemas/Post'
   parameters:
+    ThreadPath:
+      name: thread
+      in: path
+      required: true
+      description: The OP number of the thread to retrieve.
+      schema:
+        type: integer
+        minimum: 1
+        example: 570368
+      example: 570368
     BoardPath:
       name: board
       in: path
@@ -347,13 +357,3 @@ components:
         maxLength: 8
         example: po
       example: po
-    ThreadPath:
-      name: thread
-      in: path
-      required: true
-      description: The OP number of the thread to retrieve.
-      schema:
-        type: integer
-        minimum: 1
-        example: 570368
-      example: 570368

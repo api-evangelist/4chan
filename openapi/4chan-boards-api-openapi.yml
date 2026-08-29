@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: 4chan Read-Only JSON Archive Boards API
   description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
@@ -94,22 +94,17 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
-    Cooldowns:
+    BoardsResponse:
       type: object
-      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
+      description: Top-level response from `/boards.json`.
+      required:
+      - boards
       properties:
-        threads:
-          type: integer
-          description: Minimum seconds between consecutive thread creations from the same poster.
-          example: 600
-        replies:
-          type: integer
-          description: Minimum seconds between consecutive replies from the same poster.
-          example: 60
-        images:
-          type: integer
-          description: Minimum seconds between consecutive image posts from the same poster.
-          example: 60
+        boards:
+          type: array
+          description: Every board on 4chan and 4channel.
+          items:
+            $ref: '#/components/schemas/Board'
     Board:
       type: object
       description: A single board on 4chan or 4channel and its configured settings.
@@ -285,14 +280,19 @@ components:
           type: integer
           description: Minimum allowed height of uploaded images, in pixels.
           example: 100
-    BoardsResponse:
+    Cooldowns:
       type: object
-      description: Top-level response from `/boards.json`.
-      required:
-      - boards
+      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
       properties:
-        boards:
-          type: array
-          description: Every board on 4chan and 4channel.
-          items:
-            $ref: '#/components/schemas/Board'
+        threads:
+          type: integer
+          description: Minimum seconds between consecutive thread creations from the same poster.
+          example: 600
+        replies:
+          type: integer
+          description: Minimum seconds between consecutive replies from the same poster.
+          example: 60
+        images:
+          type: integer
+          description: Minimum seconds between consecutive image posts from the same poster.
+          example: 60

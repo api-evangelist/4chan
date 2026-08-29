@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
   title: 4chan Read-Only JSON Archive API
   description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
@@ -72,6 +72,14 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
+  schemas:
+    ArchiveResponse:
+      type: array
+      description: Top-level response from `/{board}/archive.json` — an array of archived OP numbers.
+      items:
+        type: integer
+        description: An archived OP ID.
+        example: 571958
   parameters:
     BoardPath:
       name: board
@@ -85,11 +93,3 @@ components:
         maxLength: 8
         example: po
       example: po
-  schemas:
-    ArchiveResponse:
-      type: array
-      description: Top-level response from `/{board}/archive.json` — an array of archived OP numbers.
-      items:
-        type: integer
-        description: An archived OP ID.
-        example: 571958
