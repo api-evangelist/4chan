@@ -1,12 +1,7 @@
 {
   "provider": "4chan",
   "sources": [
-    "4chan-archive-api-openapi.yml",
-    "4chan-boards-api-openapi.yml",
-    "4chan-catalog-api-openapi.yml",
-    "4chan-indexes-api-openapi.yml",
-    "4chan-threadlist-api-openapi.yml",
-    "4chan-threads-api-openapi.yml"
+    "_ae-authored/4chan-api.yml"
   ],
   "outputs": [
     "4chan-archive-api-openapi.yml",
@@ -20,7 +15,16 @@
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "4chan-api.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "4chan-archive-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "4chan-boards-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "4chan-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "4chan-indexes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "4chan-threadlist-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "4chan-threads-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

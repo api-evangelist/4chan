@@ -1,11 +1,7 @@
 openapi: 3.2.0
 info:
-  title: 4chan Read-Only JSON Archive Catalog API
-  description: 'Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012. All endpoints are served as static JSON documents from `a.4cdn.org` over `http://` or `https://`. The API exposes only the public, anonymous read surface of the site: board metadata, board catalogs, board threadlists, archive listings, board index pages, and individual thread documents.
-
-    There is no authentication, no posting, and no per-user write surface. Only `GET`, `HEAD`, and `OPTIONS` are accepted. CORS is enabled only for origins `boards.4chan.org` and `boards.4channel.org`.
-
-    Clients MUST send no more than one request per second, MUST set thread-polling intervals to at least 10 seconds (preferably higher), and SHOULD use `If-Modified-Since` so that unchanged threads return `304 Not Modified`.'
+  title: 4chan Read-Only JSON Catalog API
+  description: Read-only JSON API for the 4chan and 4channel imageboards, originally launched in September 2012.
   version: '2026-05-28'
   termsOfService: https://github.com/4chan/4chan-API#api-terms-of-service
   contact:
@@ -93,6 +89,27 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    CatalogResponse:
+      type: array
+      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
+      items:
+        $ref: '#/components/schemas/CatalogPage'
+    CatalogPage:
+      type: object
+      description: One index page in a catalog response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this catalog page entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
+          items:
+            $ref: '#/components/schemas/Post'
     Post:
       type: object
       description: A single post — either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, …) or only on posts with an attached file.
@@ -316,27 +333,6 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-    CatalogPage:
-      type: object
-      description: One index page in a catalog response.
-      required:
-      - page
-      - threads
-      properties:
-        page:
-          type: integer
-          description: Index page number this catalog page entry belongs to.
-          example: 1
-        threads:
-          type: array
-          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
-          items:
-            $ref: '#/components/schemas/Post'
-    CatalogResponse:
-      type: array
-      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
-      items:
-        $ref: '#/components/schemas/CatalogPage'
   parameters:
     BoardPath:
       name: board
