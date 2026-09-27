@@ -95,29 +95,6 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  parameters:
-    ThreadPath:
-      name: thread
-      in: path
-      required: true
-      description: The OP number of the thread to retrieve.
-      schema:
-        type: integer
-        minimum: 1
-        example: 570368
-      example: 570368
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
   schemas:
     ThreadResponse:
       type: object
@@ -353,3 +330,26 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
+  parameters:
+    ThreadPath:
+      name: thread
+      in: path
+      required: true
+      description: The OP number of the thread to retrieve.
+      schema:
+        type: integer
+        minimum: 1
+        example: 570368
+      example: 570368
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po

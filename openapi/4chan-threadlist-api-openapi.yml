@@ -84,11 +84,6 @@ components:
           description: Compact thread entries on this page.
           items:
             $ref: '#/components/schemas/ThreadlistEntry'
-    ThreadlistResponse:
-      type: array
-      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
-      items:
-        $ref: '#/components/schemas/ThreadlistPage'
     ThreadlistEntry:
       type: object
       description: Compact thread summary used in the per-board threadlist.
@@ -109,6 +104,11 @@ components:
           type: integer
           description: Number of replies in the thread.
           example: 2
+    ThreadlistResponse:
+      type: array
+      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
+      items:
+        $ref: '#/components/schemas/ThreadlistPage'
   parameters:
     BoardPath:
       name: board

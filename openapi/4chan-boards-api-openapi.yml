@@ -90,6 +90,22 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    Cooldowns:
+      type: object
+      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
+      properties:
+        threads:
+          type: integer
+          description: Minimum seconds between consecutive thread creations from the same poster.
+          example: 600
+        replies:
+          type: integer
+          description: Minimum seconds between consecutive replies from the same poster.
+          example: 60
+        images:
+          type: integer
+          description: Minimum seconds between consecutive image posts from the same poster.
+          example: 60
     Board:
       type: object
       description: A single board on 4chan or 4channel and its configured settings.
@@ -276,19 +292,3 @@ components:
           description: Every board on 4chan and 4channel.
           items:
             $ref: '#/components/schemas/Board'
-    Cooldowns:
-      type: object
-      description: Per-board cooldown intervals (in seconds) between successive posts of each type.
-      properties:
-        threads:
-          type: integer
-          description: Minimum seconds between consecutive thread creations from the same poster.
-          example: 600
-        replies:
-          type: integer
-          description: Minimum seconds between consecutive replies from the same poster.
-          example: 60
-        images:
-          type: integer
-          description: Minimum seconds between consecutive image posts from the same poster.
-          example: 60

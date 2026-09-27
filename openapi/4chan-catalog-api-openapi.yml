@@ -88,28 +88,20 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po
   schemas:
-    CatalogResponse:
-      type: array
-      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
-      items:
-        $ref: '#/components/schemas/CatalogPage'
-    CatalogPage:
-      type: object
-      description: One index page in a catalog response.
-      required:
-      - page
-      - threads
-      properties:
-        page:
-          type: integer
-          description: Index page number this catalog page entry belongs to.
-          example: 1
-        threads:
-          type: array
-          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
-          items:
-            $ref: '#/components/schemas/Post'
     Post:
       type: object
       description: A single post — either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, …) or only on posts with an attached file.
@@ -333,16 +325,24 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-  parameters:
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
+    CatalogPage:
+      type: object
+      description: One index page in a catalog response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this catalog page entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
+          items:
+            $ref: '#/components/schemas/Post'
+    CatalogResponse:
+      type: array
+      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
+      items:
+        $ref: '#/components/schemas/CatalogPage'

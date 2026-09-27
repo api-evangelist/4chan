@@ -80,42 +80,7 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  parameters:
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
-    PagePath:
-      name: page
-      in: path
-      required: true
-      description: Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15).
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 20
-        example: 3
-      example: 3
   schemas:
-    IndexPageResponse:
-      type: object
-      description: Top-level response from `/{board}/{page}.json`.
-      required:
-      - threads
-      properties:
-        threads:
-          type: array
-          description: Every thread visible on the requested index page.
-          items:
-            $ref: '#/components/schemas/IndexPageThread'
     IndexPageThread:
       type: object
       description: Wrapper around the posts visible for one thread inside an index-page response.
@@ -350,3 +315,38 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
+    IndexPageResponse:
+      type: object
+      description: Top-level response from `/{board}/{page}.json`.
+      required:
+      - threads
+      properties:
+        threads:
+          type: array
+          description: Every thread visible on the requested index page.
+          items:
+            $ref: '#/components/schemas/IndexPageThread'
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po
+    PagePath:
+      name: page
+      in: path
+      required: true
+      description: Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 20
+        example: 3
+      example: 3
