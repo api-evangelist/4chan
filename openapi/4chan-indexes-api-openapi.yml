@@ -47,7 +47,7 @@ paths:
                   value:
                     threads:
                     - posts:
-                      - false: 570368
+                      - 'no': 570368
                         sticky: 1
                         closed: 1
                         now: 12/31/18(Mon)17:05:48
@@ -81,6 +81,17 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    IndexPageResponse:
+      type: object
+      description: Top-level response from `/{board}/{page}.json`.
+      required:
+      - threads
+      properties:
+        threads:
+          type: array
+          description: Every thread visible on the requested index page.
+          items:
+            $ref: '#/components/schemas/IndexPageThread'
     IndexPageThread:
       type: object
       description: Wrapper around the posts visible for one thread inside an index-page response.
@@ -315,17 +326,6 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-    IndexPageResponse:
-      type: object
-      description: Top-level response from `/{board}/{page}.json`.
-      required:
-      - threads
-      properties:
-        threads:
-          type: array
-          description: Every thread visible on the requested index page.
-          items:
-            $ref: '#/components/schemas/IndexPageThread'
   parameters:
     BoardPath:
       name: board

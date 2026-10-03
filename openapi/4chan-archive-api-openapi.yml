@@ -68,6 +68,14 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
+  schemas:
+    ArchiveResponse:
+      type: array
+      description: Top-level response from `/{board}/archive.json` — an array of archived OP numbers.
+      items:
+        type: integer
+        description: An archived OP ID.
+        example: 571958
   parameters:
     BoardPath:
       name: board
@@ -81,11 +89,3 @@ components:
         maxLength: 8
         example: po
       example: po
-  schemas:
-    ArchiveResponse:
-      type: array
-      description: Top-level response from `/{board}/archive.json` — an array of archived OP numbers.
-      items:
-        type: integer
-        description: An archived OP ID.
-        example: 571958

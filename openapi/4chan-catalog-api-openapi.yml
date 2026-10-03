@@ -46,7 +46,7 @@ paths:
                   value:
                   - page: 1
                     threads:
-                    - false: 570368
+                    - 'no': 570368
                       sticky: 1
                       closed: 1
                       now: 12/31/18(Mon)17:05:48
@@ -71,7 +71,7 @@ paths:
                       omitted_posts: 0
                       omitted_images: 0
                       last_replies:
-                      - false: 570371
+                      - 'no': 570371
                         now: 12/31/18(Mon)17:21:29
                         name: Anonymous
                         com: FAQ reply.
@@ -88,19 +88,6 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  parameters:
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
   schemas:
     Post:
       type: object
@@ -346,3 +333,16 @@ components:
       description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
       items:
         $ref: '#/components/schemas/CatalogPage'
+  parameters:
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po

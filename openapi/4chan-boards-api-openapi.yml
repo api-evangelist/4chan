@@ -90,6 +90,17 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    BoardsResponse:
+      type: object
+      description: Top-level response from `/boards.json`.
+      required:
+      - boards
+      properties:
+        boards:
+          type: array
+          description: Every board on 4chan and 4channel.
+          items:
+            $ref: '#/components/schemas/Board'
     Cooldowns:
       type: object
       description: Per-board cooldown intervals (in seconds) between successive posts of each type.
@@ -281,14 +292,3 @@ components:
           type: integer
           description: Minimum allowed height of uploaded images, in pixels.
           example: 100
-    BoardsResponse:
-      type: object
-      description: Top-level response from `/boards.json`.
-      required:
-      - boards
-      properties:
-        boards:
-          type: array
-          description: Every board on 4chan and 4channel.
-          items:
-            $ref: '#/components/schemas/Board'

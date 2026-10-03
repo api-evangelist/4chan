@@ -46,15 +46,15 @@ paths:
                   value:
                   - page: 1
                     threads:
-                    - false: 570368
+                    - 'no': 570368
                       last_modified: 1546294897
                       replies: 2
-                    - false: 574933
+                    - 'no': 574933
                       last_modified: 1566530948
                       replies: 228
                   - page: 2
                     threads:
-                    - false: 568362
+                    - 'no': 568362
                       last_modified: 1566367619
                       replies: 55
         '304':
@@ -68,6 +68,11 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    ThreadlistResponse:
+      type: array
+      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
+      items:
+        $ref: '#/components/schemas/ThreadlistPage'
     ThreadlistPage:
       type: object
       description: One index page in a threadlist response.
@@ -104,11 +109,6 @@ components:
           type: integer
           description: Number of replies in the thread.
           example: 2
-    ThreadlistResponse:
-      type: array
-      description: Top-level response from `/{board}/threads.json` — an array of pages, each with its threadlist.
-      items:
-        $ref: '#/components/schemas/ThreadlistPage'
   parameters:
     BoardPath:
       name: board

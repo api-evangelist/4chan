@@ -46,7 +46,7 @@ paths:
                   x-microcks-default: true
                   value:
                     posts:
-                    - false: 570368
+                    - 'no': 570368
                       sticky: 1
                       closed: 1
                       now: 12/31/18(Mon)17:05:48
@@ -69,7 +69,7 @@ paths:
                       replies: 2
                       images: 2
                       unique_ips: 1
-                    - false: 570370
+                    - 'no': 570370
                       now: 12/31/18(Mon)17:14:56
                       name: Anonymous
                       com: FAQs about papercraft.
@@ -331,16 +331,6 @@ components:
           items:
             $ref: '#/components/schemas/Post'
   parameters:
-    ThreadPath:
-      name: thread
-      in: path
-      required: true
-      description: The OP number of the thread to retrieve.
-      schema:
-        type: integer
-        minimum: 1
-        example: 570368
-      example: 570368
     BoardPath:
       name: board
       in: path
@@ -353,3 +343,13 @@ components:
         maxLength: 8
         example: po
       example: po
+    ThreadPath:
+      name: thread
+      in: path
+      required: true
+      description: The OP number of the thread to retrieve.
+      schema:
+        type: integer
+        minimum: 1
+        example: 570368
+      example: 570368
