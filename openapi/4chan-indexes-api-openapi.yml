@@ -81,17 +81,6 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
-    IndexPageResponse:
-      type: object
-      description: Top-level response from `/{board}/{page}.json`.
-      required:
-      - threads
-      properties:
-        threads:
-          type: array
-          description: Every thread visible on the requested index page.
-          items:
-            $ref: '#/components/schemas/IndexPageThread'
     IndexPageThread:
       type: object
       description: Wrapper around the posts visible for one thread inside an index-page response.
@@ -103,6 +92,17 @@ components:
           description: OP plus preview replies for this thread.
           items:
             $ref: '#/components/schemas/Post'
+    IndexPageResponse:
+      type: object
+      description: Top-level response from `/{board}/{page}.json`.
+      required:
+      - threads
+      properties:
+        threads:
+          type: array
+          description: Every thread visible on the requested index page.
+          items:
+            $ref: '#/components/schemas/IndexPageThread'
     Post:
       type: object
       description: A single post — either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, …) or only on posts with an attached file.
@@ -327,6 +327,17 @@ components:
           items:
             $ref: '#/components/schemas/Post'
   parameters:
+    PagePath:
+      name: page
+      in: path
+      required: true
+      description: Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15).
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 20
+        example: 3
+      example: 3
     BoardPath:
       name: board
       in: path
@@ -339,14 +350,3 @@ components:
         maxLength: 8
         example: po
       example: po
-    PagePath:
-      name: page
-      in: path
-      required: true
-      description: Index page number, starting at `1`. The maximum value is the `pages` field on the matching entry in `/boards.json` (commonly 10 or 15).
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 20
-        example: 3
-      example: 3

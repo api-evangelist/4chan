@@ -95,18 +95,30 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
+  parameters:
+    ThreadPath:
+      name: thread
+      in: path
+      required: true
+      description: The OP number of the thread to retrieve.
+      schema:
+        type: integer
+        minimum: 1
+        example: 570368
+      example: 570368
+    BoardPath:
+      name: board
+      in: path
+      required: true
+      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
+      schema:
+        type: string
+        pattern: ^[a-z0-9]+$
+        minLength: 1
+        maxLength: 8
+        example: po
+      example: po
   schemas:
-    ThreadResponse:
-      type: object
-      description: Top-level response from `/{board}/thread/{thread}.json`.
-      required:
-      - posts
-      properties:
-        posts:
-          type: array
-          description: The OP followed by every reply in the thread, in chronological order.
-          items:
-            $ref: '#/components/schemas/Post'
     Post:
       type: object
       description: A single post — either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, …) or only on posts with an attached file.
@@ -330,26 +342,14 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-  parameters:
-    BoardPath:
-      name: board
-      in: path
-      required: true
-      description: Board directory short name (e.g. `a`, `b`, `g`, `pol`, `po`, `v`). The full list of valid values is the `board` field on each entry in `/boards.json`.
-      schema:
-        type: string
-        pattern: ^[a-z0-9]+$
-        minLength: 1
-        maxLength: 8
-        example: po
-      example: po
-    ThreadPath:
-      name: thread
-      in: path
-      required: true
-      description: The OP number of the thread to retrieve.
-      schema:
-        type: integer
-        minimum: 1
-        example: 570368
-      example: 570368
+    ThreadResponse:
+      type: object
+      description: Top-level response from `/{board}/thread/{thread}.json`.
+      required:
+      - posts
+      properties:
+        posts:
+          type: array
+          description: The OP followed by every reply in the thread, in chronological order.
+          items:
+            $ref: '#/components/schemas/Post'

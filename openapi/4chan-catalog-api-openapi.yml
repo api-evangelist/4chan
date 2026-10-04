@@ -89,6 +89,27 @@ paths:
         dispatcher: FALLBACK
 components:
   schemas:
+    CatalogPage:
+      type: object
+      description: One index page in a catalog response.
+      required:
+      - page
+      - threads
+      properties:
+        page:
+          type: integer
+          description: Index page number this catalog page entry belongs to.
+          example: 1
+        threads:
+          type: array
+          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
+          items:
+            $ref: '#/components/schemas/Post'
+    CatalogResponse:
+      type: array
+      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
+      items:
+        $ref: '#/components/schemas/CatalogPage'
     Post:
       type: object
       description: A single post — either an OP (when `resto == 0`) or a reply (when `resto` is the OP id). Many fields appear only on OPs (`replies`, `images`, `sticky`, `closed`, `archived`, …) or only on posts with an attached file.
@@ -312,27 +333,6 @@ components:
           description: Most recent reply objects shown in a catalog preview (OP only on catalog responses).
           items:
             $ref: '#/components/schemas/Post'
-    CatalogPage:
-      type: object
-      description: One index page in a catalog response.
-      required:
-      - page
-      - threads
-      properties:
-        page:
-          type: integer
-          description: Index page number this catalog page entry belongs to.
-          example: 1
-        threads:
-          type: array
-          description: Catalog thread entries (each is an OP `Post` object enriched with `last_replies`).
-          items:
-            $ref: '#/components/schemas/Post'
-    CatalogResponse:
-      type: array
-      description: Top-level response from `/{board}/catalog.json` — an array of pages, each containing OP threads with preview replies.
-      items:
-        $ref: '#/components/schemas/CatalogPage'
   parameters:
     BoardPath:
       name: board
