@@ -1,4 +1,4 @@
-# 4chan (4chan)
+# 4chan
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,71 +66,189 @@
 
 4chan is a simple image-based bulletin board where anyone can post comments and share images across topic-specific boards. 4chan exposes a read-only JSON API (launched September 2012) that serves the same board, thread, catalog, and archive data consumed by the public site via static JSON files at a.4cdn.org. The API supports GET/HEAD/OPTIONS only — there is no posting, authentication, or write surface.
 
-**APIs.json:** [https://github.com/4chan/4chan-API](https://github.com/4chan/4chan-API)
+**Areas:** Social · Bulletin Board · Imageboard · Read Only · JSON · Public APIs · Community
 
-## Tags
+## 4chan on APIs.io
 
-- Social
-- Bulletin Board
-- Imageboard
-- Read Only
-- JSON
-- Public APIs
-- Community
+Everything profiled for 4chan is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/4chan/](https://apis.io/providers/4chan/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (6)
 
-- **Created:** 2026-05-28
-- **Modified:** 2026-05-28
+- [4chan Archive API](https://apis.io/apis/4chan/4chan-archive-api/) — Per-board list of OP numbers for closed, archived threads.
+- [4chan Boards API](https://apis.io/apis/4chan/4chan-boards-api/) — List of all boards on 4chan and 4channel and their per-board settings.
+- [4chan Catalog API](https://apis.io/apis/4chan/4chan-catalog-api/) — Per-board catalog snapshot containing every OP and its preview replies, grouped by index page.
+- [4chan Indexes API](https://apis.io/apis/4chan/4chan-indexes-api/) — Per-board, per-page index document of threads (each with a posts array including the OP and a small number of preview replies).
+- [4chan Threadlist API](https://apis.io/apis/4chan/4chan-threadlist-api/) — Per-board summary list of every live thread (id, last-modified, reply count) grouped by index page.
+- [4chan Threads API](https://apis.io/apis/4chan/4chan-threads-api/) — Single-thread document containing the OP and every reply.
 
-## APIs
+### Published properties
 
-### 4chan Read-Only JSON API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Read-only HTTP JSON API serving boards.json, threads.json, catalog.json, archive.json, board index pages, and individual thread documents from a.4cdn.org. Mirrors the data visible at boards.4chan.org / boards.4channel.org. No authentication, no write operations. CORS allowed only from boards.4chan.org and boards.4channel.org origins.
+#### Agentic access (1)
 
-- **Human URL:** [https://github.com/4chan/4chan-API](https://github.com/4chan/4chan-API)
-- **Base URL:** `https://a.4cdn.org`
+Which operations an agent can call, which act, and which need a human in the loop.
 
-#### Tags
+- [4Chan Agentic Access](https://apis.io/agentic-access/4chan/4chan-agentic-access/)
 
-- Social
-- Imageboard
-- Read Only
+#### JSON Schema (13)
 
-#### Properties
+The data models the API reads and writes.
 
-- [Documentation](https://github.com/4chan/4chan-API)
-- [OpenAPI](openapi/4chan-api.yml) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/4chan-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/4chan-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [Sign Up](https://github.com/4chan/4chan-API#api-rules)
-- [Support](mailto:api@4chan.org)
-- [Terms of Service](https://github.com/4chan/4chan-API#api-terms-of-service)
+- [ArchiveResponse](https://apis.io/schemas/4chan/4chan-api-archive-response/)
+- [Board](https://apis.io/schemas/4chan/4chan-api-board/)
+- [BoardsResponse](https://apis.io/schemas/4chan/4chan-api-boards-response/)
+- [CatalogPage](https://apis.io/schemas/4chan/4chan-api-catalog-page/)
+- [CatalogResponse](https://apis.io/schemas/4chan/4chan-api-catalog-response/)
+- [Cooldowns](https://apis.io/schemas/4chan/4chan-api-cooldowns/)
+- [IndexPageResponse](https://apis.io/schemas/4chan/4chan-api-index-page-response/)
+- [IndexPageThread](https://apis.io/schemas/4chan/4chan-api-index-page-thread/)
+- [Post](https://apis.io/schemas/4chan/4chan-api-post/)
+- [ThreadResponse](https://apis.io/schemas/4chan/4chan-api-thread-response/)
+- [ThreadlistEntry](https://apis.io/schemas/4chan/4chan-api-threadlist-entry/)
+- [ThreadlistPage](https://apis.io/schemas/4chan/4chan-api-threadlist-page/)
+- [ThreadlistResponse](https://apis.io/schemas/4chan/4chan-api-threadlist-response/)
 
-## Common Properties
+#### JSON Structure (13)
+
+Data models expressed in JSON Structure.
+
+- [4Chan Api Archive Response Structure](https://apis.io/json-structure/4chan/4chan-api-archive-response-structure/)
+- [4Chan Api Board Structure](https://apis.io/json-structure/4chan/4chan-api-board-structure/)
+- [4Chan Api Boards Response Structure](https://apis.io/json-structure/4chan/4chan-api-boards-response-structure/)
+- [4Chan Api Catalog Page Structure](https://apis.io/json-structure/4chan/4chan-api-catalog-page-structure/)
+- [4Chan Api Catalog Response Structure](https://apis.io/json-structure/4chan/4chan-api-catalog-response-structure/)
+- [4Chan Api Cooldowns Structure](https://apis.io/json-structure/4chan/4chan-api-cooldowns-structure/)
+- [4Chan Api Index Page Response Structure](https://apis.io/json-structure/4chan/4chan-api-index-page-response-structure/)
+- [4Chan Api Index Page Thread Structure](https://apis.io/json-structure/4chan/4chan-api-index-page-thread-structure/)
+- [4Chan Api Post Structure](https://apis.io/json-structure/4chan/4chan-api-post-structure/)
+- [4Chan Api Thread Response Structure](https://apis.io/json-structure/4chan/4chan-api-thread-response-structure/)
+- [4Chan Api Threadlist Entry Structure](https://apis.io/json-structure/4chan/4chan-api-threadlist-entry-structure/)
+- [4Chan Api Threadlist Page Structure](https://apis.io/json-structure/4chan/4chan-api-threadlist-page-structure/)
+- [4Chan Api Threadlist Response Structure](https://apis.io/json-structure/4chan/4chan-api-threadlist-response-structure/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [4Chan Context](https://apis.io/jsonld/4chan/4chan-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [4Chan Vocabulary](https://apis.io/vocabularies/4chan/4chan-vocabulary/)
+
+#### Examples (10)
+
+Example requests and responses.
+
+- [4Chan Api Board Example](https://apis.io/examples/4chan/4chan-api-board-example/)
+- [4Chan Api Boards Response Example](https://apis.io/examples/4chan/4chan-api-boards-response-example/)
+- [4Chan Api Catalog Page Example](https://apis.io/examples/4chan/4chan-api-catalog-page-example/)
+- [4Chan Api Cooldowns Example](https://apis.io/examples/4chan/4chan-api-cooldowns-example/)
+- [4Chan Api Index Page Response Example](https://apis.io/examples/4chan/4chan-api-index-page-response-example/)
+- [4Chan Api Index Page Thread Example](https://apis.io/examples/4chan/4chan-api-index-page-thread-example/)
+- [4Chan Api Post Example](https://apis.io/examples/4chan/4chan-api-post-example/)
+- [4Chan Api Thread Response Example](https://apis.io/examples/4chan/4chan-api-thread-response-example/)
+- [4Chan Api Threadlist Entry Example](https://apis.io/examples/4chan/4chan-api-threadlist-entry-example/)
+- [4Chan Api Threadlist Page Example](https://apis.io/examples/4chan/4chan-api-threadlist-page-example/)
+
+#### Collections (7)
+
+Postman and Open Collection request collections.
+
+- [4chan Read-Only JSON API](https://apis.io/collections/4chan/open-4chan-api/)
+- [4chan Read-Only JSON Archive API](https://apis.io/collections/4chan/open-4chan-archive-api/)
+- [4chan Read-Only JSON Archive Boards API](https://apis.io/collections/4chan/open-4chan-boards-api/)
+- [4chan Read-Only JSON Archive Catalog API](https://apis.io/collections/4chan/open-4chan-catalog-api/)
+- [4chan Read-Only JSON Archive Indexes API](https://apis.io/collections/4chan/open-4chan-indexes-api/)
+- [4chan Read-Only JSON Archive Threadlist API](https://apis.io/collections/4chan/open-4chan-threadlist-api/)
+- [4chan Read-Only JSON Archive Threads API](https://apis.io/collections/4chan/open-4chan-threads-api/)
+
+#### Governance rules (2)
+
+Spectral rulesets for the provider's contracts.
+
+- [4chan — jsonschema rules](https://apis.io/rules/4chan/4chan-jsonschema-spectral-rules/)
+- [4chan API Rules](https://apis.io/rules/4chan/4chan-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [4Chan Domain Security](https://apis.io/security/4chan/4chan-domain-security/)
+- [4Chan Vulnerability Disclosure](https://apis.io/security/4chan/4chan-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [4Chan Plans Pricing](https://apis.io/plans/4chan/4chan-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [4Chan Rate Limits](https://apis.io/rate-limits/4chan/4chan-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.4chan.org)
 - [Documentation](https://github.com/4chan/4chan-API)
-- [GitHub Organization](https://github.com/4chan)
-- [Source Code](https://github.com/4chan/4chan-JS)
-- [Contact Email](mailto:api@4chan.org)
-- [Tools](https://github.com/sh0n0/chan-mcp-server)
-- [SDK](https://github.com/bibanon/BASC-py4chan)
-- [SDK](https://github.com/e000/py-4chan)
-- [SDK](https://github.com/yocontra/4chanjs)
-- [SDK](https://github.com/moshee/go-4chan-api)
-- [SDK](https://github.com/insomnimus/rchan)
-- [SDK](https://github.com/g-gundam/yotsubAPI)
-- [Tools](https://github.com/hydrusnetwork/BA-4chan-thread-archiver)
-- [Public APIs Listing](https://github.com/public-apis/public-apis)
-- [Plans](plans/4chan-plans-pricing.yml)
-- [Rate Limits](rate-limits/4chan-rate-limits.yml)
-- [Vocabulary](vocabulary/4chan-vocabulary.yml)
-- [Spectral Rules](rules/4chan-rules.yml)
-- [JSON-LD](json-ld/4chan-context.jsonld) — [JSON-LD](https://www.w3.org/TR/json-ld11/)
+- [GitHub](https://github.com/4chan)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 29.9** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.4 |
+| Contract quality | 21.3 |
+| Contract governance | 27.3 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 31.0 |
+| Access clarity | 28.9 |
+
+**Agent readiness 23.6** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | na |
+| Error Semantics | — |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 20.6** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/4chan/](https://apis.io/providers/4chan/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for 4chan: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/4chan/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
